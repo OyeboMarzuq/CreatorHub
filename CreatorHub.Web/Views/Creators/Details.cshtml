@@ -1,0 +1,188 @@
+﻿@model CreatorHub.Application.DTOs.Creators.CreatorDto
+
+@{
+    ViewData["Title"] = Model.DisplayName;
+}
+
+<div class="container py-5">
+
+    <!-- BACK -->
+
+    <div class="mb-4">
+
+        <a asp-controller="Creators"
+           asp-action="Index"
+           class="text-decoration-none">
+
+            ← Back to Creators
+
+        </a>
+
+    </div>
+
+
+    <!-- PROFILE -->
+
+    <div class="row g-5">
+
+        <!-- IMAGE -->
+
+        <div class="col-lg-5">
+
+            @if (!string.IsNullOrWhiteSpace(Model.ProfileImageUrl))
+            {
+                <img src="@Model.ProfileImageUrl"
+                     alt="@Model.DisplayName"
+                     class="img-fluid rounded-4 shadow-sm w-100"
+                     style="max-height: 600px; object-fit: cover;" />
+            }
+            else
+            {
+                <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
+                     style="height: 500px;">
+
+                    <span class="text-muted">
+                        No Image
+                    </span>
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div class="col-lg-7">
+
+            <div class="mb-4">
+
+                <h1 class="display-5 fw-bold">
+                    @Model.DisplayName
+                </h1>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Bio))
+                {
+                    <p class="lead text-muted">
+                        @Model.Bio
+                    </p>
+                }
+
+            </div>
+
+
+            <!-- BASIC INFORMATION -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-body p-4">
+
+                    <h2 class="h5 mb-4">
+                        Profile Information
+                    </h2>
+
+
+                    @if (Model.Age.HasValue)
+                    {
+                        <div class="mb-3">
+
+                            <strong>
+                                Age:
+                            </strong>
+
+                            @Model.Age
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Gender))
+                    {
+                        <div class="mb-3">
+
+                            <strong>
+                                Gender:
+                            </strong>
+
+                            @Model.Gender
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Country))
+                    {
+                        <div class="mb-3">
+
+                            <strong>
+                                Country:
+                            </strong>
+
+                            @Model.Country
+
+                        </div>
+                    }
+
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Region))
+                    {
+                        <div class="mb-3">
+
+                            <strong>
+                                Region:
+                            </strong>
+
+                            @Model.Region
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- CATEGORIES -->
+            @if (Model.Categories.Any())
+            {
+                <div class="mb-4">
+
+                    <h2 class="h5 mb-3">
+                        Categories
+                    </h2>
+
+                    @foreach (var category in Model.Categories)
+                    {
+                        <span class="badge bg-dark me-2 mb-2">
+                            @category
+                        </span>
+                    }
+
+                </div>
+            }
+
+
+            <!-- TAGS -->
+            @if (Model.Tags.Any())
+            {
+                <div class="mb-4">
+
+                    <h2 class="h5 mb-3">
+                        Tags
+                    </h2>
+
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <span class="badge bg-light text-dark border me-2 mb-2">
+                            #@tag
+                        </span>
+                    }
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

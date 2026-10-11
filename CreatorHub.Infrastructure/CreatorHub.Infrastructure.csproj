@@ -21,7 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CreatorHub.Application\CreatorHub.Application.csproj" />
     <ProjectReference Include="..\CreatorHub.Domain\CreatorHub.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Importers\Frivol\" />
+    <Folder Include="Seed\" />
   </ItemGroup>
 
 </Project>

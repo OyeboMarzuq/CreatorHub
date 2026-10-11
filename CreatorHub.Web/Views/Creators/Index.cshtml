@@ -1,0 +1,285 @@
+﻿@model IEnumerable<CreatorHub.Application.DTOs.Creators.CreatorDto>
+
+@{
+    ViewData["Title"] = "Creators";
+}
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+    <div class="text-center mb-5">
+
+        <h1 class="display-5 fw-bold">
+            Discover Creators
+        </h1>
+
+        <p class="lead text-muted">
+            Discover creators across different platforms.
+        </p>
+
+    </div>
+
+
+    <!-- SEARCH / FILTER AREA -->
+    <div class="card border-0 shadow-sm mb-5">
+
+        <div class="card-body p-4">
+
+            <form method="get" asp-controller="Creators" asp-action="Index">
+
+                <div class="row g-3">
+
+                    <!-- SEARCH -->
+                    <div class="col-md-5">
+
+                        <label class="form-label">
+                            Search
+                        </label>
+
+                        <input type="text"
+                               name="search"
+                               class="form-control"
+                               placeholder="Search creators..." />
+
+                    </div>
+
+
+                    <!-- GENDER -->
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            Gender
+                        </label>
+
+                        <select name="gender" class="form-select">
+
+                            <option value="">
+                                Any
+                            </option>
+
+                            <option value="Female">
+                                Female
+                            </option>
+
+                            <option value="Male">
+                                Male
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- MIN AGE -->
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            Min Age
+                        </label>
+
+                        <input type="number"
+                               name="minAge"
+                               class="form-control"
+                               min="18"
+                               placeholder="18" />
+
+                    </div>
+
+
+                    <!-- MAX AGE -->
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            Max Age
+                        </label>
+
+                        <input type="number"
+                               name="maxAge"
+                               class="form-control"
+                               placeholder="30" />
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+                    <div class="col-md-1 d-flex align-items-end">
+
+                        <button type="submit"
+                                class="btn btn-dark w-100">
+
+                            Go
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- CREATOR COUNT -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="h4 mb-0">
+            Creators
+        </h2>
+
+        <span class="text-muted">
+            @Model.Count() creators
+        </span>
+
+    </div>
+
+
+    <!-- CREATOR GRID -->
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+
+            <h3>
+                No creators found
+            </h3>
+
+            <p class="text-muted">
+                There are currently no creators to display.
+            </p>
+
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var creator in Model)
+            {
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+
+                        <!-- IMAGE -->
+                        @if (!string.IsNullOrWhiteSpace(
+                                        creator.ProfileImageUrl))
+                        {
+                            <img src="@creator.ProfileImageUrl"
+                                 alt="@creator.DisplayName"
+                                 class="card-img-top"
+                                 style="height: 280px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                 style="height: 280px;">
+
+                                <span class="text-muted">
+                                    No Image
+                                </span>
+
+                            </div>
+                        }
+
+
+                        <!-- BODY -->
+
+                        <div class="card-body">
+
+                            <h3 class="h5 mb-2">
+                                @creator.DisplayName
+                            </h3>
+
+
+                            <!-- BASIC INFO -->
+
+                            <div class="text-muted small mb-3">
+
+                                @if (creator.Age.HasValue)
+                                {
+                                    <span>
+                                        @creator.Age
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(
+                                                        creator.Gender))
+                                {
+                                    <span>
+                                        · @creator.Gender
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(
+                                                        creator.Country))
+                                {
+                                    <span>
+                                        · @creator.Country
+                                    </span>
+                                }
+
+                            </div>
+
+
+                            <!-- CATEGORIES -->
+                            @if (creator.Categories.Any())
+                            {
+                                <div class="mb-2">
+
+                                    @foreach (var category
+                                                            in creator.Categories.Take(3))
+                                    {
+                                        <span class="badge bg-dark me-1">
+                                            @category
+                                        </span>
+                                    }
+
+                                </div>
+                            }
+
+
+                            <!-- TAGS -->
+                            @if (creator.Tags.Any())
+                            {
+                                <div>
+
+                                    @foreach (var tag
+                                                            in creator.Tags.Take(4))
+                                    {
+                                        <span class="badge bg-light text-dark border me-1">
+                                            #@tag
+                                        </span>
+                                    }
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- FOOTER -->
+
+                        <div class="card-footer bg-white border-0 p-3">
+
+                            <a asp-controller="Creators"
+                               asp-action="Details"
+                               asp-route-slug="@creator.Slug"
+                               class="btn btn-outline-dark w-100">
+
+                                View Profile
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>

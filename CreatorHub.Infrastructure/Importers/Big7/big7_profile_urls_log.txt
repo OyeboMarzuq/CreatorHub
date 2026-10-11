@@ -1,0 +1,101 @@
+2026-10-10 10:42:03 - Big7 Profil-URL-Sammlung gestartet
+2026-10-10 10:42:03 - Rufe Suchseite start=0 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=0
+2026-10-10 10:42:05 - Profile auf start=0: 120 | Gesamt: 120
+2026-10-10 10:42:06 - Rufe Suchseite start=60 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=60
+2026-10-10 10:42:08 - Profile auf start=60: 120 | Gesamt: 240
+2026-10-10 10:42:08 - Rufe Suchseite start=120 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=120
+2026-10-10 10:42:11 - Profile auf start=120: 120 | Gesamt: 360
+2026-10-10 10:42:11 - Rufe Suchseite start=180 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=180
+2026-10-10 10:42:17 - Profile auf start=180: 120 | Gesamt: 480
+2026-10-10 10:42:17 - Rufe Suchseite start=240 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=240
+2026-10-10 10:42:19 - Profile auf start=240: 120 | Gesamt: 600
+2026-10-10 10:42:20 - Rufe Suchseite start=300 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=300
+2026-10-10 10:42:22 - Profile auf start=300: 120 | Gesamt: 720
+2026-10-10 10:42:22 - Rufe Suchseite start=360 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=360
+2026-10-10 10:42:24 - Profile auf start=360: 120 | Gesamt: 840
+2026-10-10 10:42:24 - Rufe Suchseite start=420 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=420
+2026-10-10 10:42:27 - Profile auf start=420: 120 | Gesamt: 960
+2026-10-10 10:42:27 - Rufe Suchseite start=480 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=480
+2026-10-10 10:42:29 - Profile auf start=480: 120 | Gesamt: 1080
+2026-10-10 10:42:30 - Rufe Suchseite start=540 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=540
+2026-10-10 10:42:32 - Profile auf start=540: 120 | Gesamt: 1200
+2026-10-10 10:42:32 - 10 Suchseiten erreicht - 5 Sekunden Pause...
+2026-10-10 10:42:37 - Rufe Suchseite start=600 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=600
+2026-10-10 10:42:39 - Profile auf start=600: 120 | Gesamt: 1320
+2026-10-10 10:42:40 - Rufe Suchseite start=660 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=660
+2026-10-10 10:42:42 - Profile auf start=660: 120 | Gesamt: 1440
+2026-10-10 10:42:42 - Rufe Suchseite start=720 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=720
+2026-10-10 10:42:44 - Profile auf start=720: 120 | Gesamt: 1560
+2026-10-10 10:42:45 - Rufe Suchseite start=780 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=780
+2026-10-10 10:42:48 - Profile auf start=780: 120 | Gesamt: 1680
+2026-10-10 10:42:48 - Rufe Suchseite start=840 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=840
+2026-10-10 10:42:51 - Profile auf start=840: 120 | Gesamt: 1800
+2026-10-10 10:42:51 - Rufe Suchseite start=900 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=900
+2026-10-10 10:42:53 - Profile auf start=900: 120 | Gesamt: 1920
+2026-10-10 10:42:54 - Rufe Suchseite start=960 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=960
+2026-10-10 10:43:09 - Profile auf start=960: 120 | Gesamt: 2040
+2026-10-10 10:43:09 - Rufe Suchseite start=1020 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1020
+2026-10-10 10:43:11 - Profile auf start=1020: 120 | Gesamt: 2160
+2026-10-10 10:43:12 - Rufe Suchseite start=1080 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1080
+2026-10-10 10:43:16 - Profile auf start=1080: 120 | Gesamt: 2280
+2026-10-10 10:43:16 - Rufe Suchseite start=1140 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1140
+2026-10-10 10:43:18 - Profile auf start=1140: 120 | Gesamt: 2400
+2026-10-10 10:43:18 - 10 Suchseiten erreicht - 5 Sekunden Pause...
+2026-10-10 10:43:23 - Rufe Suchseite start=1200 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1200
+2026-10-10 10:43:25 - Profile auf start=1200: 120 | Gesamt: 2520
+2026-10-10 10:43:25 - Rufe Suchseite start=1260 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1260
+2026-10-10 10:43:27 - Profile auf start=1260: 120 | Gesamt: 2640
+2026-10-10 10:43:27 - Rufe Suchseite start=1320 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1320
+2026-10-10 10:43:29 - Profile auf start=1320: 120 | Gesamt: 2760
+2026-10-10 10:43:29 - Rufe Suchseite start=1380 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1380
+2026-10-10 10:43:31 - Profile auf start=1380: 120 | Gesamt: 2880
+2026-10-10 10:43:32 - Rufe Suchseite start=1440 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1440
+2026-10-10 10:43:33 - Profile auf start=1440: 120 | Gesamt: 3000
+2026-10-10 10:43:34 - Rufe Suchseite start=1500 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1500
+2026-10-10 10:43:36 - Profile auf start=1500: 120 | Gesamt: 3120
+2026-10-10 10:43:37 - Rufe Suchseite start=1560 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1560
+2026-10-10 10:43:39 - Profile auf start=1560: 120 | Gesamt: 3240
+2026-10-10 10:43:39 - Rufe Suchseite start=1620 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1620
+2026-10-10 10:43:41 - Profile auf start=1620: 120 | Gesamt: 3360
+2026-10-10 10:43:42 - Rufe Suchseite start=1680 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1680
+2026-10-10 10:43:43 - Profile auf start=1680: 120 | Gesamt: 3480
+2026-10-10 10:43:44 - Rufe Suchseite start=1740 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1740
+2026-10-10 10:43:46 - Profile auf start=1740: 120 | Gesamt: 3600
+2026-10-10 10:43:46 - 10 Suchseiten erreicht - 5 Sekunden Pause...
+2026-10-10 10:43:51 - Rufe Suchseite start=1800 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1800
+2026-10-10 10:43:52 - Profile auf start=1800: 120 | Gesamt: 3720
+2026-10-10 10:43:53 - Rufe Suchseite start=1860 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1860
+2026-10-10 10:43:55 - Profile auf start=1860: 120 | Gesamt: 3840
+2026-10-10 10:43:55 - Rufe Suchseite start=1920 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1920
+2026-10-10 10:43:57 - Profile auf start=1920: 120 | Gesamt: 3960
+2026-10-10 10:43:57 - Rufe Suchseite start=1980 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=1980
+2026-10-10 10:43:59 - Profile auf start=1980: 120 | Gesamt: 4080
+2026-10-10 10:44:00 - Rufe Suchseite start=2040 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2040
+2026-10-10 10:44:02 - Profile auf start=2040: 120 | Gesamt: 4200
+2026-10-10 10:44:02 - Rufe Suchseite start=2100 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2100
+2026-10-10 10:44:04 - Profile auf start=2100: 120 | Gesamt: 4320
+2026-10-10 10:44:04 - Rufe Suchseite start=2160 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2160
+2026-10-10 10:44:06 - Profile auf start=2160: 120 | Gesamt: 4440
+2026-10-10 10:44:07 - Rufe Suchseite start=2220 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2220
+2026-10-10 10:44:09 - Profile auf start=2220: 120 | Gesamt: 4560
+2026-10-10 10:44:09 - Rufe Suchseite start=2280 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2280
+2026-10-10 10:44:11 - Profile auf start=2280: 120 | Gesamt: 4680
+2026-10-10 10:44:11 - Rufe Suchseite start=2340 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2340
+2026-10-10 10:44:14 - Profile auf start=2340: 120 | Gesamt: 4800
+2026-10-10 10:44:14 - 10 Suchseiten erreicht - 5 Sekunden Pause...
+2026-10-10 10:44:19 - Rufe Suchseite start=2400 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2400
+2026-10-10 10:44:21 - Profile auf start=2400: 120 | Gesamt: 4920
+2026-10-10 10:44:21 - Rufe Suchseite start=2460 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2460
+2026-10-10 10:44:23 - Profile auf start=2460: 120 | Gesamt: 5040
+2026-10-10 10:44:24 - Rufe Suchseite start=2520 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2520
+2026-10-10 10:44:26 - Profile auf start=2520: 120 | Gesamt: 5160
+2026-10-10 10:44:26 - Rufe Suchseite start=2580 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2580
+2026-10-10 10:44:28 - Profile auf start=2580: 120 | Gesamt: 5280
+2026-10-10 10:44:28 - Rufe Suchseite start=2640 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2640
+2026-10-10 10:44:30 - Profile auf start=2640: 120 | Gesamt: 5400
+2026-10-10 10:44:30 - Rufe Suchseite start=2700 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2700
+2026-10-10 10:44:32 - Profile auf start=2700: 22 | Gesamt: 5422
+2026-10-10 10:44:32 - Rufe Suchseite start=2760 ab: https://www.big7.com/suche_profile.html?do=single&q=&search_type=amateur&start=2760
+2026-10-10 10:44:33 - Profile auf start=2760: 0 | Gesamt: 5422
+2026-10-10 10:44:34 - Fertig. Gespeicherte Profileinträge: 5422
+2026-10-10 10:44:34 - CSV-Datei: big7_profile_urls.csv

@@ -1,8 +1,1089 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "CreatorHub | Where creators get discovered";
+    Layout = null; // standalone landing page; remove this line to render inside _Layout
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"]</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --red: #E10600;
+            --red-d: #B80500;
+            --black: #0A0A0A;
+            --white: #fff;
+            --grey: #F2F2F2;
+            --mute: #6b6b6b;
+            --cond: 'Anton','Impact','Arial Narrow',sans-serif;
+            --serif: 'Instrument Serif','Georgia',serif;
+            --sans: 'Manrope','Helvetica Neue',Arial,sans-serif
+        }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: var(--sans);
+            color: var(--black);
+            background: var(--white);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: 0;
+            background: none;
+            color: inherit
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--black);
+            outline-offset: 3px
+        }
+
+        .wrap {
+            width: min(1240px,100% - 48px);
+            margin-inline: auto
+        }
+
+        .cond {
+            font-family: var(--cond);
+            text-transform: uppercase;
+            font-weight: 400;
+            line-height: .92;
+            letter-spacing: .01em
+        }
+
+        .ital {
+            font-family: var(--serif);
+            font-style: italic;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: -.01em
+        }
+
+        /* HERO */
+        .hero {
+            background: var(--red);
+            color: var(--white);
+            padding-bottom: 150px;
+            position: relative
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 26px 0
+        }
+
+        .logo {
+            font-family: var(--cond);
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: .02em
+        }
+
+            .logo i {
+                font-family: var(--serif);
+                font-weight: 400;
+                text-transform: none
+            }
+
+        .links {
+            display: flex;
+            gap: 36px;
+            font-weight: 700;
+            font-size: 15px
+        }
+
+            .links a {
+                padding: 4px 0;
+                border-bottom: 2px solid transparent;
+                transition: border-color .2s
+            }
+
+                .links a:hover, .links a.on {
+                    border-color: var(--white)
+                }
+
+        .join {
+            background: var(--black);
+            color: var(--white);
+            padding: 12px 24px;
+            font-weight: 800;
+            font-size: 14px;
+            transition: background .2s,color .2s
+        }
+
+            .join:hover {
+                background: var(--white);
+                color: var(--black)
+            }
+
+        .hero h1 {
+            margin-top: 70px
+        }
+
+            .hero h1 .l1 {
+                display: block;
+                font-size: clamp(56px,11.5vw,168px)
+            }
+
+            .hero h1 .l2 {
+                display: block;
+                font-size: clamp(60px,12.5vw,184px);
+                color: var(--black);
+                margin-top: -.04em;
+                padding-bottom: .08em
+            }
+
+        .lede {
+            max-width: 640px;
+            font-size: clamp(16px,1.5vw,19px);
+            margin-top: 26px;
+            font-weight: 500
+        }
+
+        .search {
+            margin-top: 40px;
+            width: min(72%,880px);
+            display: flex;
+            background: var(--white);
+            color: var(--black);
+            box-shadow: 8px 8px 0 var(--black)
+        }
+
+            .search svg {
+                flex: none;
+                width: 26px;
+                height: 26px;
+                margin: 0 6px 0 24px;
+                align-self: center
+            }
+
+            .search input {
+                flex: 1;
+                min-width: 0;
+                border: 0;
+                padding: 26px 16px;
+                font: 500 19px var(--sans);
+                outline: 0;
+                background: transparent
+            }
+
+            .search:focus-within {
+                outline: 3px solid var(--black);
+                outline-offset: 3px
+            }
+
+            .search button {
+                background: var(--black);
+                color: var(--white);
+                padding: 0 40px;
+                font-weight: 800;
+                letter-spacing: .12em;
+                font-size: 14px;
+                transition: background .2s
+            }
+
+                .search button:hover {
+                    background: var(--red-d)
+                }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 26px
+        }
+
+        .f {
+            padding: 9px 20px;
+            border: 2px solid var(--white);
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: .1em;
+            transition: all .15s
+        }
+
+            .f:hover {
+                background: rgba(255,255,255,.18)
+            }
+
+            .f[aria-pressed=true] {
+                background: var(--black);
+                border-color: var(--black)
+            }
+
+        /* HERO CARDS */
+        .stack {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -120px;
+            pointer-events: none
+        }
+
+            .stack .wrap {
+                display: flex;
+                justify-content: flex-end;
+                padding-right: 12px
+            }
+
+        .mini {
+            width: 230px;
+            padding: 16px;
+            margin-left: -34px;
+            box-shadow: 0 14px 30px rgba(0,0,0,.28);
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+            .mini:nth-child(1) {
+                background: var(--white);
+                color: var(--black);
+                transform: rotate(-4deg) translateY(10px)
+            }
+
+            .mini:nth-child(2) {
+                background: var(--black);
+                color: var(--white);
+                transform: translateY(-14px);
+                z-index: 2
+            }
+
+            .mini:nth-child(3) {
+                background: var(--red-d);
+                color: var(--white);
+                transform: rotate(4deg) translateY(8px);
+                border: 2px solid var(--white)
+            }
+
+            .mini b {
+                display: block;
+                font-size: 14px;
+                line-height: 1.2
+            }
+
+            .mini small {
+                font-size: 12px;
+                opacity: .75;
+                display: block
+            }
+
+        .av {
+            flex: none;
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            font-family: var(--cond);
+            font-size: 20px;
+            letter-spacing: .03em
+        }
+
+            .av.r {
+                background: var(--red);
+                color: #fff
+            }
+
+            .av.k {
+                background: var(--black);
+                color: #fff
+            }
+
+            .av.w {
+                background: var(--grey);
+                color: var(--red);
+                border: 2px solid var(--red)
+            }
+
+        .tick {
+            display: inline-grid;
+            place-items: center;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--red);
+            color: #fff;
+            font-size: 9px;
+            vertical-align: 1px;
+            margin-left: 5px
+        }
+
+        .mini:nth-child(3) .tick, .mini:nth-child(2) .tick {
+            background: #fff;
+            color: var(--red)
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 110px 0
+        }
+
+        .sec-h {
+            font-size: clamp(44px,7vw,96px);
+            margin-bottom: 44px
+        }
+
+            .sec-h .ital {
+                font-size: 1.1em;
+                color: var(--red)
+            }
+
+        #results {
+            background: var(--grey);
+            display: none;
+            padding-top: 90px
+        }
+
+            #results.show {
+                display: block
+            }
+
+        .rmeta {
+            font-weight: 700;
+            margin-bottom: 28px;
+            color: var(--mute)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
+            gap: 24px
+        }
+
+        .card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            display: flex;
+            flex-direction: column;
+            transition: transform .2s,box-shadow .2s
+        }
+
+            .card:hover {
+                transform: translate(-4px,-4px);
+                box-shadow: 8px 8px 0 var(--red)
+            }
+
+            .card .ph {
+                height: 190px;
+                display: grid;
+                place-items: center;
+                position: relative;
+                font-family: var(--cond);
+                font-size: 84px;
+                color: #fff;
+                overflow: hidden
+            }
+
+        .ph.r {
+            background: var(--red)
+        }
+
+        .ph.k {
+            background: var(--black)
+        }
+
+        .ph.w {
+            background: var(--grey);
+            color: var(--red)
+        }
+
+        .ph::after {
+            content: "";
+            position: absolute;
+            inset: auto -20% -45% 30%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: rgba(255,255,255,.12)
+        }
+
+        .ph.w::after {
+            background: rgba(225,6,0,.08)
+        }
+
+        .plat {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--white);
+            color: var(--black);
+            font: 800 11px var(--sans);
+            letter-spacing: .12em;
+            padding: 5px 10px;
+            z-index: 1
+        }
+
+        .ph.k .plat {
+            background: var(--red);
+            color: #fff
+        }
+
+        .cb {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex: 1
+        }
+
+            .cb h3 {
+                font-size: 24px
+            }
+
+            .cb .u {
+                color: var(--mute);
+                font-weight: 600;
+                font-size: 14px
+            }
+
+            .cb .m {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 14px;
+                font-size: 14px;
+                font-weight: 700
+            }
+
+                .cb .m span:last-child {
+                    color: var(--red)
+                }
+
+        .vp {
+            margin-top: 18px;
+            background: var(--black);
+            color: #fff;
+            text-align: center;
+            padding: 12px;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: .1em;
+            transition: background .2s
+        }
+
+            .vp:hover {
+                background: var(--red)
+            }
+
+        .empty {
+            padding: 60px 0
+        }
+
+            .empty h3 {
+                font-size: clamp(40px,6vw,80px)
+            }
+
+            .empty p {
+                margin-top: 14px;
+                font-size: 18px
+            }
+
+        /* PLATFORMS */
+        .dark {
+            background: var(--black);
+            color: var(--white)
+        }
+
+            .dark .sec-h .ital {
+                color: var(--red)
+            }
+
+            .dark .sub {
+                max-width: 520px;
+                font-size: 18px;
+                margin: -12px 0 52px;
+                color: #cfcfcf
+            }
+
+        .pgrid {
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            grid-auto-rows: minmax(300px,auto);
+            gap: 20px
+        }
+
+        .pb {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: left;
+            transition: transform .2s;
+            position: relative;
+            overflow: hidden
+        }
+
+            .pb:hover {
+                transform: translateY(-6px)
+            }
+
+            .pb .n {
+                font-family: var(--cond);
+                font-size: clamp(46px,6vw,92px);
+                line-height: .95;
+                text-transform: uppercase
+            }
+
+            .pb p {
+                max-width: 300px;
+                font-weight: 600
+            }
+
+            .pb .go {
+                font-weight: 800;
+                font-size: 13px;
+                letter-spacing: .1em;
+                margin-top: 18px
+            }
+
+        .p1 {
+            background: var(--red);
+            grid-row: span 2
+        }
+
+            .p1 .n {
+                font-size: clamp(90px,15vw,230px)
+            }
+
+        .p2 {
+            background: var(--white);
+            color: var(--black)
+        }
+
+            .p2 .n .ital {
+                color: var(--red)
+            }
+
+        .p3 {
+            border: 2px solid var(--red)
+        }
+
+            .p3 .n {
+                color: var(--red)
+            }
+
+        .p4 {
+            grid-column: 1 / -1;
+            background: var(--grey);
+            color: var(--black);
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 30px;
+            flex-wrap: wrap;
+            min-height: 220px
+        }
+
+            .p4 .n {
+                font-size: clamp(70px,13vw,190px)
+            }
+
+                .p4 .n span {
+                    color: var(--red)
+                }
+
+        /* MESSAGE */
+        .msg .big {
+            font-size: clamp(60px,11vw,160px)
+        }
+
+            .msg .big .ital {
+                display: block;
+                color: var(--red);
+                font-size: 1.08em
+            }
+
+        .msg .lede2 {
+            max-width: 600px;
+            font-size: 20px;
+            margin: 34px 0 80px;
+            font-weight: 500
+        }
+
+        .three {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 48px;
+            border-top: 4px solid var(--black);
+            padding-top: 36px
+        }
+
+            .three h3 {
+                font-size: 40px;
+                color: var(--red);
+                margin-bottom: 10px
+            }
+
+            .three p {
+                max-width: 300px
+            }
+
+        /* CTA + FOOTER */
+        .cta {
+            background: var(--red);
+            color: #fff;
+            text-align: center;
+            padding: 140px 0
+        }
+
+            .cta h2 {
+                font-size: clamp(54px,11vw,160px)
+            }
+
+                .cta h2 .ital {
+                    display: block;
+                    color: var(--black);
+                    font-size: 1.08em
+                }
+
+            .cta p {
+                font-size: 20px;
+                margin: 26px 0 40px;
+                font-weight: 600
+            }
+
+            .cta a {
+                display: inline-block;
+                background: var(--black);
+                color: #fff;
+                padding: 22px 52px;
+                font-weight: 800;
+                letter-spacing: .12em;
+                transition: transform .2s,background .2s
+            }
+
+                .cta a:hover {
+                    background: #fff;
+                    color: var(--black);
+                    transform: translateY(-3px)
+                }
+
+        footer {
+            background: var(--black);
+            color: #fff;
+            padding: 70px 0 34px
+        }
+
+        .fg {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 40px
+        }
+
+            .fg .logo {
+                font-size: 40px;
+                color: var(--red)
+            }
+
+            .fg h4 {
+                font-size: 13px;
+                color: #8a8a8a;
+                margin-bottom: 14px;
+                letter-spacing: .1em
+            }
+
+            .fg li {
+                list-style: none;
+                margin-bottom: 8px;
+                font-weight: 600
+            }
+
+                .fg li a:hover {
+                    color: var(--red)
+                }
+
+        .copy {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid #2a2a2a;
+            color: #8a8a8a;
+            font-size: 14px
+        }
+
+        @@media(max-width:960px) {
+            .links {
+                display: none
+            }
+
+            .search {
+                width: 100%
+            }
+
+            .stack {
+                position: static;
+                margin-top: 60px;
+                overflow: hidden;
+                padding-bottom: 20px
+            }
+
+                .stack .wrap {
+                    justify-content: center
+                }
+
+            .hero {
+                padding-bottom: 50px
+            }
+
+            .mini:nth-child(3) {
+                display: none
+            }
+
+            .pgrid {
+                grid-template-columns: 1fr
+            }
+
+            .p1 {
+                grid-row: auto;
+                min-height: 340px
+            }
+
+            .three, .fg {
+                grid-template-columns: 1fr
+            }
+
+            section {
+                padding: 80px 0
+            }
+        }
+
+        @@media(max-width:560px) {
+            .search {
+                flex-wrap: wrap;
+                box-shadow: 5px 5px 0 var(--black)
+            }
+
+                .search svg {
+                    margin-left: 16px
+                }
+
+                .search input {
+                    padding: 20px 12px;
+                    font-size: 16px;
+                    flex: 1 1 60%
+                }
+
+                .search button {
+                    width: 100%;
+                    padding: 18px
+                }
+
+            .mini:nth-child(1) {
+                display: none
+            }
+        }
+
+        @@media(prefers-reduced-motion:reduce) {
+            * {
+                transition: none !important;
+                scroll-behavior: auto !important
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero" id="home">
+        <div class="wrap">
+            <nav aria-label="Main">
+                <a href="#home" class="logo">Creator<i>Hub</i></a>
+                <div class="links">
+                    <a href="#home" class="on">Home</a>
+                    <a href="#creators">Creators</a>
+                    <a href="#platforms">Platforms</a>
+                    <a href="#about">About</a>
+                </div>
+                <div class="nav-actions">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Home" asp-action="Dashboard" class="admin-link">Dashboard</a>
+                    }
+                    else if (User.Identity?.IsAuthenticated != true)
+                    {
+                        <a asp-controller="Account"
+                           asp-action="Login"
+                           asp-route-returnUrl="/Home/Dashboard"
+                           class="admin-link">
+                            Admin Sign In
+                        </a>
+                    }
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-controller="Account" asp-action="ChangePassword" class="join">My Account</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Register" class="join">Join CreatorHub</a>
+                    }
+                </div>
+            </nav>
+
+            <h1 class="cond">
+                <span class="l1">Where creators</span>
+                <span class="l2 ital">get discovered.</span>
+            </h1>
+            <p class="lede">Discover creators, explore their profiles, and find the people worth following across BIG7, Frivol, MDH and Amatuer.</p>
+
+            <form class="search" id="searchForm" role="search" autocomplete="off">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m20 20-4.9-4.9" /></svg>
+                <input id="q" type="search" placeholder="Search creators, usernames, categories..." aria-label="Search creators, usernames, categories or platforms" />
+                <button type="submit">SEARCH</button>
+            </form>
+
+            <div class="filters" role="group" aria-label="Filter by platform">
+                <button class="f" data-p="ALL" aria-pressed="true">ALL</button>
+                <button class="f" data-p="BIG7" aria-pressed="false">BIG7</button>
+                <button class="f" data-p="FRIVOL" aria-pressed="false">FRIVOL</button>
+                <button class="f" data-p="MDH" aria-pressed="false">MDH</button>
+                <button class="f" data-p="AMATEUR" aria-pressed="false">AMATEUR</button>
+            </div>
+        </div>
+
+        <div class="stack" aria-hidden="true">
+            <div class="wrap">
+                <div class="mini"><div class="av r">AO</div><div><b>Amara Okafor<span class="tick">✓</span></b><small>@@amaraglow</small><small>BIG7 · 482K</small></div></div>
+                <div class="mini"><div class="av r">ZL</div><div><b>Zainab Lawal<span class="tick">✓</span></b><small>@@zee.beats</small><small>FRIVOL · 891K</small></div></div>
+                <div class="mini"><div class="av k">TA</div><div><b>Tobi Adeyemi<span class="tick">✓</span></b><small>@@tobi.frames</small><small>MDH · 214K</small></div></div>
+            </div>
+        </div>
+    </header>
+
+    <section id="results" aria-live="polite">
+        <div class="wrap">
+            <h2 class="sec-h cond" id="rtitle">Results</h2>
+            <p class="rmeta" id="rmeta"></p>
+            <div class="grid" id="rgrid"></div>
+            <div class="empty" id="empty" hidden>
+                <h3 class="cond">No creators found</h3>
+                <p>Try searching for another creator, username, category, or platform.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="creators" style="padding-top:170px">
+        <div class="wrap">
+            <h2 class="sec-h cond">Creators <span class="ital">to discover</span></h2>
+            <div class="grid" id="fgrid"></div>
+        </div>
+    </section>
+
+    <section class="dark" id="platforms">
+        <div class="wrap">
+            <h2 class="sec-h cond">Four platforms.<br /><span class="ital">One creator hub.</span></h2>
+            <p class="sub">Discover creators across the platforms that power CreatorHub.</p>
+            <div class="pgrid">
+                <button class="pb p1" data-go="BIG7"><span class="n">01 /<br />BIG7</span><span><p>Creator discovery and profiles from BIG7.</p><div class="go">BROWSE BIG7</div></span></button>
+                <button class="pb p2" data-go="FRIVOL"><span class="n">02 / <span class="ital">Frivol</span></span><span><p>Discover creators and profiles from Frivol.</p><div class="go">BROWSE FRIVOL</div></span></button>
+                <button class="pb p3" data-go="MDH"><span class="n">03 / MDH</span><span><p>Explore creators available through MDH.</p><div class="go">BROWSE MDH</div></span></button>
+                <button class="pb p4" data-go="AMATEUR"><span class="n"><span>04 /</span> Amateur</span><span><p>Find and discover creators from Amatuer.</p><div class="go">BROWSE AMATEUR</div></span></button>
+            </div>
+        </div>
+    </section>
+
+    <section class="msg" id="about">
+        <div class="wrap">
+            <h2 class="big cond">Find people<span class="ital">worth following.</span></h2>
+            <p class="lede2">CreatorHub brings creators from BIG7, Frivol, MDH and Amatuer into one searchable discovery experience.</p>
+            <div class="three">
+                <div><h3 class="cond">Discover</h3><p>Find creators based on names, categories and platforms.</p></div>
+                <div><h3 class="cond">Explore</h3><p>View creator profiles and their platform presence.</p></div>
+                <div><h3 class="cond">Connect</h3><p>Discover where your favorite creators are active.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="wrap">
+            <h2 class="cond">Who will you<span class="ital">discover next?</span></h2>
+            <p>Start exploring creators on CreatorHub.</p>
+            <a href="#home" id="ctaBtn">EXPLORE CREATORS</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="wrap">
+            <div class="fg">
+                <div><a href="#home" class="logo">Creator<i>Hub</i></a></div>
+                <div><h4>EXPLORE</h4><ul><li><a href="#home">Home</a></li><li><a href="#creators">Creators</a></li><li><a href="#platforms">Platforms</a></li><li><a href="#about">About</a></li><li><a href="#">Contact</a></li></ul></div>
+                <div><h4>PLATFORMS</h4><ul><li><a href="#platforms">BIG7</a></li><li><a href="#platforms">Frivol</a></li><li><a href="#platforms">MDH</a></li><li><a href="#platforms">Amatuer</a></li></ul></div>
+            </div>
+            <p class="copy">© 2026 CreatorHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+
+        const $ = selector => document.querySelector(selector);
+        const $$ = selector => [...document.querySelectorAll(selector)];
+
+        let plat = 'ALL';
+        let searchTimer;
+
+        const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
+
+        function profileCard(profile) {
+            const username = esc(profile.username);
+            const platform = esc(profile.platform);
+            const url = esc(profile.url);
+
+            return `
+                <article class="card">
+                    <div class="ph r">
+                        <span class="plat">${platform}</span>
+                        ${username.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div class="cb">
+                        <h3 class="cond">${username}</h3>
+                        <span class="u">Imported profile</span>
+                        <div class="m">
+                            <span>Page ${profile.sourcePage}</span>
+                            <span>${platform}</span>
+                        </div>
+                        <a class="vp"
+                           href="${url}"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            VIEW ORIGINAL PROFILE
+                        </a>
+                    </div>
+                </article>`;
+        }
+
+        async function run(scroll = false) {
+            const searchTerm = $('#q').value.trim();
+
+            const resultsSection = $('#results');
+            const resultGrid = $('#rgrid');
+            const emptyMessage = $('#empty');
+            const resultMeta = $('#rmeta');
+            const resultTitle = $('#rtitle');
+
+            resultsSection.classList.add('show');
+            resultTitle.textContent = 'Searching...';
+            resultMeta.hidden = false;
+            resultMeta.textContent = 'Connecting to CreatorHub database...';
+            resultGrid.innerHTML = '';
+            emptyMessage.hidden = true;
+
+            try {
+                const params = new URLSearchParams({
+                    q: searchTerm,
+                    platform: plat
+                });
+
+                const response = await fetch(
+                    `/Creators/Search?${params.toString()}`
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Search failed: HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error('The server could not complete the search.');
+                }
+
+                resultTitle.textContent = searchTerm
+                    ? `Results for "${searchTerm}"`
+                    : `Creators on ${plat}`;
+
+                resultMeta.textContent =
+                    `${data.count} profile${data.count === 1 ? '' : 's'} found`;
+
+                resultGrid.innerHTML = data.results
+                    .map(profileCard)
+                    .join('');
+
+                emptyMessage.hidden = data.count > 0;
+
+                if (scroll) {
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (error) {
+                console.error(error);
+
+                resultTitle.textContent = 'Search unavailable';
+                resultMeta.textContent =
+                    'Could not load profiles. Check the server and try again.';
+                emptyMessage.hidden = true;
+            }
+        }
+
+        function setPlat(platform) {
+            plat = platform;
+
+            $$('.f').forEach(button => {
+                button.setAttribute(
+                    'aria-pressed',
+                    button.dataset.p === platform
+                );
+            });
+        }
+
+        $('#searchForm').addEventListener('submit', event => {
+            event.preventDefault();
+            run(true);
+        });
+
+        $('#q').addEventListener('input', () => {
+            clearTimeout(searchTimer);
+
+            searchTimer = setTimeout(() => {
+                if ($('#q').value.trim().length >= 2) {
+                    run(false);
+                }
+            }, 350);
+        });
+
+        $$('.f').forEach(button => {
+            button.addEventListener('click', () => {
+                setPlat(button.dataset.p);
+                run(true);
+            });
+        });
+
+        $$('.pb').forEach(button => {
+            button.addEventListener('click', () => {
+                setPlat(button.dataset.go);
+                run(true);
+            });
+        });
+
+        $('#ctaBtn').addEventListener('click', event => {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            $('#q').focus({ preventScroll: true });
+        });
+
+    </script>
+</body>
+</html>

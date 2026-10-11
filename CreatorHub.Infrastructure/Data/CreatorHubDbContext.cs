@@ -15,10 +15,12 @@ namespace CreatorHub.Infrastructure.Data
         {
         }
 
+        public DbSet<User> Users => Set<User>();
         public DbSet<Creator> Creators => Set<Creator>();
         public DbSet<Platform> Platforms => Set<Platform>();
         public DbSet<PlatformProfile> PlatformProfiles => Set<PlatformProfile>();
 
+        public DbSet<ProfileUrl> ProfileUrls { get; set; }
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<CreatorCategory> CreatorCategories => Set<CreatorCategory>();
 

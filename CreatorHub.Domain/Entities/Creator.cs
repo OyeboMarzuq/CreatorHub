@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CreatorHub.Domain.Entities
 {
@@ -15,11 +12,25 @@ namespace CreatorHub.Domain.Entities
 
         public int? Age { get; set; }
         public string? Gender { get; set; }
+
         public string? Country { get; set; }
+        public string? City { get; set; }
         public string? Region { get; set; }
 
-        public string? ProfileImageUrl { get; set; }
+        public int? HeightCm { get; set; }
+        public decimal? WeightKg { get; set; }
+
+        public string? Tagline { get; set; }
         public string? Bio { get; set; }
+
+        public string? Languages { get; set; }
+        public string? Sexuality { get; set; }
+        public string? ThreeWords { get; set; }
+        public string? Characteristics { get; set; }
+
+        public string? AgeRating { get; set; }
+
+        public string? ProfileImageUrl { get; set; }
 
         public bool IsActive { get; set; } = true;
 
