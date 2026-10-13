@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="Importers\Frivol\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Seed\" />
   </ItemGroup>
 

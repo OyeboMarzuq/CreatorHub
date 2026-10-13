@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CreatorHub.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatorHubDb : Migration
+    public partial class InitialPostgres : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,14 +15,14 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    MetaTitle = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    MetaDescription = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsIndexable = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Slug = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
+                    MetaTitle = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    MetaDescription = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsIndexable = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,10 +33,10 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "CreatorAttributeDefinitions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Slug = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,18 +47,27 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "Creators",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: true),
-                    Gender = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Region = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    ProfileImageUrl = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DisplayName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Slug = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    Age = table.Column<int>(type: "integer", nullable: true),
+                    Gender = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Country = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    City = table.Column<string>(type: "text", nullable: true),
+                    Region = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    HeightCm = table.Column<int>(type: "integer", nullable: true),
+                    WeightKg = table.Column<decimal>(type: "numeric", nullable: true),
+                    Tagline = table.Column<string>(type: "text", nullable: true),
+                    Bio = table.Column<string>(type: "text", nullable: true),
+                    Languages = table.Column<string>(type: "text", nullable: true),
+                    Sexuality = table.Column<string>(type: "text", nullable: true),
+                    ThreeWords = table.Column<string>(type: "text", nullable: true),
+                    Characteristics = table.Column<string>(type: "text", nullable: true),
+                    AgeRating = table.Column<string>(type: "text", nullable: true),
+                    ProfileImageUrl = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,11 +78,11 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "Platforms",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    BaseUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Slug = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    BaseUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -81,17 +90,35 @@ namespace CreatorHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProfileUrls",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    Url = table.Column<string>(type: "text", nullable: false),
+                    Source = table.Column<string>(type: "text", nullable: false),
+                    SourcePage = table.Column<int>(type: "integer", nullable: false),
+                    IsProcessed = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ProcessedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfileUrls", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    MetaTitle = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    MetaDescription = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsIndexable = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Slug = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
+                    MetaTitle = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    MetaDescription = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsIndexable = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,14 +126,39 @@ namespace CreatorHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
+                    PasswordHash = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    Region = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Gender = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Role = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "User"),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    FailedLoginCount = table.Column<int>(type: "integer", nullable: false),
+                    LockoutEndUtc = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    PasswordResetTokenHash = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: true),
+                    PasswordResetExpiresUtc = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Votes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstCreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SecondCreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SelectedCreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FirstCreatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SecondCreatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SelectedCreatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -117,10 +169,10 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "AttributeValues",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AttributeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    AttributeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Value = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Slug = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,8 +189,8 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "CreatorCategories",
                 columns: table => new
                 {
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -161,15 +213,15 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "PlatformProfiles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PlatformId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    ProfileUrl = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    ExternalId = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    ProfileImageUrl = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    LastImportedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PlatformId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Username = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    ProfileUrl = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    ExternalId = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    ProfileImageUrl = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    LastImportedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -192,8 +244,8 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "CreatorTags",
                 columns: table => new
                 {
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TagId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,8 +268,8 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "CreatorAttributes",
                 columns: table => new
                 {
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AttributeValueId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AttributeValueId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -240,14 +292,14 @@ namespace CreatorHub.Infrastructure.Migrations
                 name: "MatchSuggestions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SourceProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TargetProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ConfidenceScore = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
-                    MatchReasons = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReviewedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SourceProfileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TargetProfileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ConfidenceScore = table.Column<decimal>(type: "numeric(5,2)", precision: 5, scale: 2, nullable: false),
+                    MatchReasons = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ReviewedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -371,6 +423,12 @@ namespace CreatorHub.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Votes_CreatedAt",
                 table: "Votes",
                 column: "CreatedAt");
@@ -395,6 +453,12 @@ namespace CreatorHub.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "MatchSuggestions");
+
+            migrationBuilder.DropTable(
+                name: "ProfileUrls");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Votes");

@@ -47,8 +47,29 @@ builder.Services.AddHttpClient<ICreatorImporter, CreatorImporter>();
 var app = builder.Build();
 
 // Seed the admin account (credentials come from configuration / user-secrets, never from code).
+//using (var scope = app.Services.CreateScope())
+//{
+//    await AdminSeeder.SeedAsync(
+//        scope.ServiceProvider,
+//        app.Configuration["AdminSeed:Email"],
+//        app.Configuration["AdminSeed:Password"],
+//        app.Configuration["AdminSeed:FirstName"],
+//        app.Configuration["AdminSeed:LastName"]);
+//}
+
 using (var scope = app.Services.CreateScope())
 {
+    var db = scope.ServiceProvider.GetRequiredService<CreatorHubDbContext>();
+
+    try
+    {
+        await db.Database.MigrateAsync();
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex, "Database migration failed.");
+    }
+
     await AdminSeeder.SeedAsync(
         scope.ServiceProvider,
         app.Configuration["AdminSeed:Email"],
