@@ -1,4 +1,5 @@
 using CreatorHub.Application.Auth;
+using CreatorHub.Application.Interfaces.Importers;
 using CreatorHub.Infrastructure.Data;
 using CreatorHub.Web.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +13,16 @@ namespace CreatorHub.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly CreatorHubDbContext _context;
+        private readonly ICreatorImporter _creatorImporter;
 
-        public HomeController(ILogger<HomeController> logger, CreatorHubDbContext context)
+        public HomeController(
+    ILogger<HomeController> logger,
+    CreatorHubDbContext context,
+    ICreatorImporter creatorImporter)
         {
             _logger = logger;
             _context = context;
+            _creatorImporter = creatorImporter;
         }
 
         public IActionResult Index()
@@ -62,6 +68,37 @@ namespace CreatorHub.Web.Controllers
             };
 
             return View(model);
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.Admin)]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportFrivol(
+            int batchSize = 5,
+            CancellationToken cancellationToken = default)
+        {
+            // Keep the initial test small.
+            batchSize = Math.Clamp(batchSize, 1, 10);
+
+            try
+            {
+                await _creatorImporter.ImportAsync(
+                    batchSize,
+                    cancellationToken);
+
+                TempData["ImportMessage"] =
+                    $"Import run completed for a batch of up to {batchSize} profiles. Check the database to verify the results.";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Frivol creator import failed.");
+
+                TempData["ImportMessage"] =
+                    "The import failed. Check the application logs for details.";
+            }
+
+            return RedirectToAction(nameof(Dashboard));
         }
 
         public IActionResult Privacy()

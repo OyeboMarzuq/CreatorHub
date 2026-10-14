@@ -11,7 +11,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="format-detection" content="telephone=no" />
     <title>@ViewData["Title"] | CreatorHub</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -787,6 +789,183 @@
         .source-list .source-card + .source-card {
             margin-top: 16px;
         }
+
+        /* ------------------------------------------------------------------
+                   Import controls
+                ------------------------------------------------------------------ */
+        .notice {
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            background: #FFF0EF;
+            border-left: 4px solid var(--red);
+            color: var(--red-dark);
+            font-size: 13px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .import-box {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .import-title {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .import-help {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .import-form {
+            margin-top: 14px;
+        }
+
+        .button.red {
+            width: 100%;
+            background: var(--red);
+            border-color: var(--red);
+            cursor: pointer;
+        }
+
+            .button.red:hover {
+                background: var(--black);
+                border-color: var(--black);
+                color: var(--white);
+            }
+
+        .button[disabled] {
+            opacity: .6;
+            cursor: wait;
+            pointer-events: none;
+        }
+
+        /* ------------------------------------------------------------------
+                   Desktop / iOS Safari / Android compatibility
+                ------------------------------------------------------------------ */
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            /* keeps content clear of the notch / rounded corners on iPhones */
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        .topbar {
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .footer {
+            padding-bottom: calc(23px + env(safe-area-inset-bottom));
+        }
+
+        /* iOS gives buttons rounded corners and its own look by default */
+        button {
+            font: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 0;
+        }
+
+        /* comfortable 44px touch targets */
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            padding: 0;
+        }
+
+        .logout {
+            min-height: 44px;
+        }
+
+        .nav {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-wrap {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @@media (max-width: 1000px) {
+            .nav a {
+                font-size: 12px;
+            }
+        }
+
+        /* Members table becomes a list of cards on phones */
+        @@media (max-width: 680px) {
+            .members-table thead {
+                display: none;
+            }
+
+            .members-table,
+            .members-table tbody,
+            .members-table tr,
+            .members-table td {
+                display: block;
+                width: 100%;
+            }
+
+                .members-table tr {
+                    padding: 14px 18px;
+                    border-bottom: 1px solid var(--border);
+                }
+
+                    .members-table tr:last-child {
+                        border-bottom: 0;
+                    }
+
+                .members-table td {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 16px;
+                    padding: 6px 0;
+                    border-bottom: 0;
+                    white-space: normal;
+                    text-align: right;
+                    overflow-wrap: anywhere;
+                }
+
+                    .members-table td::before {
+                        content: attr(data-label);
+                        flex-shrink: 0;
+                        color: var(--muted);
+                        font-size: 10px;
+                        font-weight: 800;
+                        letter-spacing: .1em;
+                        text-transform: uppercase;
+                        text-align: left;
+                    }
+
+                .members-table .who {
+                    text-align: left;
+                }
+
+            .nav a {
+                font-size: 12px;
+            }
+        }
+
+        /* no sticky hover effects on touch screens */
+        @@media (hover: none) {
+            .action-card:hover {
+                transform: none;
+            }
+        }
     </style>
 </head>
 
@@ -907,6 +1086,11 @@
                     </div>
 
                     <div class="panel-body source-list">
+                        @if (TempData["ImportMessage"] is string importMessage)
+                        {
+                            <div class="notice" role="status">@importMessage</div>
+                        }
+
                         @if (Model.Sources.Count == 0)
                         {
                             <p class="section-description">No profile URLs have been collected yet.</p>
@@ -938,6 +1122,25 @@
                                 </div>
                             </div>
                         }
+
+                        <div class="import-box">
+                            <div class="import-title">Import profiles</div>
+                            <p class="import-help">
+                                Fetches the next 5 unprocessed Frivol profiles and saves them as creators.
+                            </p>
+
+                            <form asp-controller="Home"
+                                  asp-action="ImportFrivol"
+                                  method="post"
+                                  class="import-form"
+                                  id="import-form">
+                                <input type="hidden" name="batchSize" value="5" />
+
+                                <button type="submit" class="button red" id="import-button">
+                                    Import 5 Frivol profiles <span aria-hidden="true">↓</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -974,16 +1177,16 @@
                                 @foreach (var m in Model.RecentMembers)
                                 {
                                     <tr>
-                                        <td>
+                                        <td data-label="Member">
                                             <div class="who">
                                                 <span class="dot">@m.Name.Substring(0, 1).ToUpperInvariant()</span>
                                                 @m.Name
                                             </div>
                                         </td>
-                                        <td class="mute">@m.Email</td>
-                                        <td>@m.Region</td>
-                                        <td>@m.Gender</td>
-                                        <td class="mute">@m.JoinedAt.ToString("dd MMM yyyy")</td>
+                                        <td class="mute" data-label="Email">@m.Email</td>
+                                        <td data-label="Region">@m.Region</td>
+                                        <td data-label="Gender">@m.Gender</td>
+                                        <td class="mute" data-label="Joined">@m.JoinedAt.ToString("dd MMM yyyy")</td>
                                     </tr>
                                 }
                             </tbody>
@@ -1035,5 +1238,19 @@
             <span>Creator management · Platform imports</span>
         </div>
     </footer>
+
+    <script>
+        // Prevents double submits while an import is running.
+        (function () {
+            var form = document.getElementById('import-form');
+            if (!form) return;
+
+            form.addEventListener('submit', function () {
+                var button = document.getElementById('import-button');
+                button.setAttribute('disabled', 'disabled');
+                button.textContent = 'Importing, please wait...';
+            });
+        })();
+    </script>
 </body>
 </html>
