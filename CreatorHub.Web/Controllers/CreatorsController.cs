@@ -81,20 +81,9 @@ public class CreatorsController : Controller
             !string.IsNullOrWhiteSpace(hairLength) ||
             !string.IsNullOrWhiteSpace(region);
 
+
         if (!hasAdvancedFilters)
         {
-            if (string.IsNullOrWhiteSpace(q) &&
-                (string.IsNullOrWhiteSpace(platform) ||
-                 platform.Equals("ALL", StringComparison.OrdinalIgnoreCase)))
-            {
-                return Json(new
-                {
-                    success = true,
-                    count = 0,
-                    results = Array.Empty<object>()
-                });
-            }
-
             var profileQuery = _context.ProfileUrls
                 .AsNoTracking()
                 .AsQueryable();
@@ -132,7 +121,7 @@ public class CreatorsController : Controller
                 results = profileResults
             });
         }
-
+            
         var creatorQuery = _context.Creators
             .AsNoTracking()
             .Include(c => c.PlatformProfiles)
