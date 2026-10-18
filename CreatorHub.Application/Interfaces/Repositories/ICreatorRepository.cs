@@ -19,6 +19,14 @@ namespace CreatorHub.Application.Interfaces.Repositories
             Guid platformId,
             string externalId);
 
+        Task<Creator?> GetRandomActiveCreatorAsync(
+    Guid? excludeCreatorId = null,
+    CancellationToken cancellationToken = default);
+
+        Task<List<Creator>> GetActiveByIdsAsync(
+            IReadOnlyCollection<Guid> ids,
+            CancellationToken cancellationToken = default);
+
         Task<PlatformProfile?> GetPlatformProfileByUsernameAsync(
             Guid platformId,
             string username);

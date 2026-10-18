@@ -383,6 +383,9 @@ namespace CreatorHub.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsProcessed")
                         .HasColumnType("boolean");
 
@@ -542,11 +545,21 @@ namespace CreatorHub.Infrastructure.Migrations
                     b.Property<Guid>("SelectedCreatorId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("FirstCreatorId");
+
+                    b.HasIndex("SecondCreatorId");
+
                     b.HasIndex("SelectedCreatorId");
+
+                    b.HasIndex("UserId", "FirstCreatorId", "SecondCreatorId")
+                        .IsUnique();
 
                     b.ToTable("Votes");
                 });
@@ -655,6 +668,35 @@ namespace CreatorHub.Infrastructure.Migrations
                     b.Navigation("Creator");
 
                     b.Navigation("Platform");
+                });
+
+            modelBuilder.Entity("CreatorHub.Domain.Entities.Vote", b =>
+                {
+                    b.HasOne("CreatorHub.Domain.Entities.Creator", null)
+                        .WithMany()
+                        .HasForeignKey("FirstCreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CreatorHub.Domain.Entities.Creator", null)
+                        .WithMany()
+                        .HasForeignKey("SecondCreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CreatorHub.Domain.Entities.Creator", null)
+                        .WithMany()
+                        .HasForeignKey("SelectedCreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CreatorHub.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CreatorHub.Domain.Entities.AttributeValue", b =>

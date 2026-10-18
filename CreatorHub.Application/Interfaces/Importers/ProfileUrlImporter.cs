@@ -1,8 +1,8 @@
-﻿using System.Net;
-using System.Text.RegularExpressions;
-using CreatorHub.Application.Interfaces.Importers;
+﻿using CreatorHub.Application.Interfaces.Importers;
 using CreatorHub.Application.Interfaces.Repositories;
 using CreatorHub.Domain.Entities;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace CreatorHub.Application.Importers;
 
@@ -71,7 +71,7 @@ public class ProfileUrlImporter : IProfileUrlImporter
                         request,
                         cancellationToken);
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     Console.WriteLine(
                         $"Page {page} returned {(int)response.StatusCode}.");
@@ -94,7 +94,8 @@ public class ProfileUrlImporter : IProfileUrlImporter
                         Source = "frivol",
                         SourcePage = profile.SourcePage,
                         IsProcessed = false,
-                        CreatedAt = DateTime.UtcNow
+                        CreatedAt = DateTime.UtcNow,
+                        ImageUrl = profile.ImageUrl
                     }).ToList();
 
                 if (entities.Count > 0)
@@ -138,8 +139,39 @@ public class ProfileUrlImporter : IProfileUrlImporter
         string html,
         int sourcePage)
     {
-        var profiles = new List<ProfileUrlResult>();
+        var profiles = new List<ProfileUrlResult>(capacity: 256);
 
+        // First: try to match links that contain an <img ... src="..."> immediately inside the anchor.
+        var matchesWithImg = Regex.Matches(
+            html,
+            @"<a[^>]+href=[""']([^""']*/profil/[^""']+)[""'][^>]*>\s*(?:<img[^>]+src=[""']([^""']+)[""'][^>]*>)",
+            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        var seenUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (Match match in matchesWithImg)
+        {
+            var hrefRaw = WebUtility.HtmlDecode(match.Groups[1].Value);
+            var profileUrl = NormalizeProfileUrl(hrefRaw);
+            if (!profileUrl.StartsWith("https://www.frivol.com/profil/", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            profileUrl = Regex.Replace(profileUrl, @"[#?].*$", string.Empty);
+
+            var username = ExtractUsername(profileUrl);
+            if (string.IsNullOrWhiteSpace(username))
+                continue;
+
+            var imgSrcRaw = match.Groups.Count >= 3 ? match.Groups[2].Value : string.Empty;
+            var imgSrc = string.IsNullOrWhiteSpace(imgSrcRaw) ? null : WebUtility.HtmlDecode(imgSrcRaw);
+
+            if (seenUrls.Add(profileUrl))
+            {
+                profiles.Add(new ProfileUrlResult(username, profileUrl, sourcePage, imgSrc));
+            }
+        }
+
+        // Fallback: capture anchors without an immediate <img>, but only ones we haven't captured already.
         var matches = Regex.Matches(
             html,
             @"href=[""']([^""']*/profil/[^""']+)[""']",
@@ -147,37 +179,40 @@ public class ProfileUrlImporter : IProfileUrlImporter
 
         foreach (Match match in matches)
         {
-            var href =
-                WebUtility.HtmlDecode(
-                    match.Groups[1].Value);
+            var href = WebUtility.HtmlDecode(match.Groups[1].Value);
+            var profileUrl = NormalizeProfileUrl(href);
 
-            var profileUrl =
-                NormalizeProfileUrl(href);
-
-            if (!profileUrl.StartsWith(
-                    "https://www.frivol.com/profil/",
-                    StringComparison.OrdinalIgnoreCase))
+            if (!profileUrl.StartsWith("https://www.frivol.com/profil/", StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }
 
-            profileUrl =
-                Regex.Replace(
-                    profileUrl,
-                    @"[#?].*$",
-                    string.Empty);
+            profileUrl = Regex.Replace(profileUrl, @"[#?].*$", string.Empty);
 
-            var username =
-                ExtractUsername(profileUrl);
+            if (seenUrls.Contains(profileUrl))
+                continue;
 
+            var username = ExtractUsername(profileUrl);
             if (string.IsNullOrWhiteSpace(username))
                 continue;
 
-            profiles.Add(
-                new ProfileUrlResult(
-                    username,
-                    profileUrl,
-                    sourcePage));
+            // Try to find a nearby src attribute (very small heuristic).
+            string? imageUrl = null;
+            var idx = match.Index;
+            var lookahead = 200; // characters after the match to search for an img src
+            if (idx >= 0 && idx + match.Length < html.Length)
+            {
+                var start = idx + match.Length;
+                var end = Math.Min(start + lookahead, html.Length);
+                var snippet = html.Substring(start, end - start);
+
+                var imgMatch = Regex.Match(snippet, @"<img[^>]+src=[""']([^""']+)[""']", RegexOptions.IgnoreCase);
+                if (imgMatch.Success)
+                    imageUrl = WebUtility.HtmlDecode(imgMatch.Groups[1].Value);
+            }
+
+            seenUrls.Add(profileUrl);
+            profiles.Add(new ProfileUrlResult(username, profileUrl, sourcePage, imageUrl));
         }
 
         return profiles;
@@ -228,5 +263,6 @@ public class ProfileUrlImporter : IProfileUrlImporter
     private sealed record ProfileUrlResult(
         string Username,
         string ProfileUrl,
-        int SourcePage);
+        int SourcePage,
+        string? ImageUrl);
 }

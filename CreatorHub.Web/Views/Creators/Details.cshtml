@@ -26,28 +26,27 @@
     <div class="row g-5">
 
         <!-- IMAGE -->
-
         <div class="col-lg-5">
-
             @if (!string.IsNullOrWhiteSpace(Model.ProfileImageUrl))
             {
                 <img src="@Model.ProfileImageUrl"
                      alt="@Model.DisplayName"
                      class="img-fluid rounded-4 shadow-sm w-100"
-                     style="max-height: 600px; object-fit: cover;" />
+                     style="max-height: 600px; object-fit: cover;"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+
+                <div class="bg-light rounded-4 align-items-center justify-content-center"
+                     style="height: 500px; display: none;">
+                    <span class="text-muted">Image could not be loaded</span>
+                </div>
             }
             else
             {
                 <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
                      style="height: 500px;">
-
-                    <span class="text-muted">
-                        No Image
-                    </span>
-
+                    <span class="text-muted">No Image URL provided</span>
                 </div>
             }
-
         </div>
 
 

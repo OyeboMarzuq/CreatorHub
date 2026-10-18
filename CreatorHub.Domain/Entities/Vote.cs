@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+namespace CreatorHub.Domain.Entities;
 
-namespace CreatorHub.Domain.Entities
+public class Vote
 {
-    public class Vote
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public Guid FirstCreatorId { get; set; }
-        public Guid SecondCreatorId { get; set; }
+    // The registered user who cast this vote.
+    public Guid UserId { get; set; }
+    public User User { get; set; } = null!;
 
-        public Guid SelectedCreatorId { get; set; }
+    // The two creators in this matchup.
+    public Guid FirstCreatorId { get; set; }
+    public Guid SecondCreatorId { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    }
+    // Must be either FirstCreatorId or SecondCreatorId.
+    public Guid SelectedCreatorId { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

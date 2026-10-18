@@ -1,0 +1,329 @@
+﻿@model CreatorHub.Application.DTOs.Voting.CreatorMatchupDto
+
+@{
+    ViewData["Title"] = "Creator Face-Off";
+}
+
+<style>
+    .voting-page {
+        min-height: 75vh;
+        padding: 48px 16px;
+        color: #f8fafc;
+        background: #101010;
+        border-radius: 20px;
+    }
+
+    .voting-heading {
+        text-align: center;
+        margin-bottom: 36px;
+    }
+
+    .voting-heading h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .voting-heading h1 span {
+        color: #ef4444;
+    }
+
+    .voting-heading p {
+        color: #b8b8b8;
+    }
+
+    .matchup-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        max-width: 920px;
+        margin: 0 auto;
+    }
+
+    .creator-card {
+        overflow: hidden;
+        border: 1px solid #343434;
+        border-radius: 18px;
+        background: #191919;
+        text-align: center;
+    }
+
+    .creator-photo {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+        background: #292929;
+    }
+
+    .creator-details {
+        padding: 22px;
+    }
+
+    .creator-details h2 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+    }
+
+    .creator-tagline {
+        min-height: 42px;
+        color: #b8b8b8;
+    }
+
+    .vote-button {
+        width: 100%;
+        padding: 13px 18px;
+        border: 0;
+        border-radius: 10px;
+        background: #dc2626;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .vote-button:hover {
+        background: #b91c1c;
+    }
+
+    .versus {
+        margin: 28px 0;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 900;
+        color: #ef4444;
+    }
+
+    .voting-links {
+        margin-top: 32px;
+        text-align: center;
+    }
+
+    .voting-links a {
+        color: #f87171;
+        margin: 0 12px;
+    }
+
+
+    .leaderboard-box {
+        max-width: 650px;
+        margin: 42px auto 0;
+        padding: 26px 24px;
+        text-align: center;
+        background: linear-gradient(135deg, #1d1d1d, #141414);
+        border: 1px solid #3a2525;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+        .leaderboard-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .leaderboard-box p {
+            margin-bottom: 20px;
+            color: #b8b8b8;
+        }
+
+    .leaderboard-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 24px;
+        border-radius: 10px;
+        background: #dc2626;
+        color: #fff !important;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+        .leaderboard-button:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+            color: #fff !important;
+        }
+
+        .leaderboard-button:focus-visible {
+            outline: 2px solid #f87171;
+            outline-offset: 4px;
+        }
+
+
+    @@media (max-width: 640px) {
+        .matchup-grid {
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        .creator-photo {
+            height: 280px;
+        }
+
+        .versus {
+            margin: 18px 0;
+        }
+    }
+</style>
+
+<div class="voting-page">
+    <header class="voting-heading">
+        <h1>CREATOR <span>FACE-OFF</span></h1>
+        <p>Two creators. One choice. Who gets your vote?</p>
+    </header>
+
+    @if (TempData["Success"] is string success)
+    {
+        <div class="alert alert-success" role="status">@success</div>
+    }
+
+    @if (TempData["Error"] is string error)
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+
+    <div class="matchup-grid">
+        <article class="creator-card">
+            @if (!string.IsNullOrWhiteSpace(Model.FirstCreator.ProfileImageUrl))
+            {
+                <img class="creator-photo"
+                     src="@Model.FirstCreator.ProfileImageUrl"
+                     alt="@Model.FirstCreator.DisplayName"
+                     loading="lazy" />
+            }
+            else
+            {
+                <div class="creator-photo d-flex align-items-center justify-content-center">
+                    <span class="display-1 fw-bold">
+                        @Model.FirstCreator.DisplayName.Substring(0, 1)
+                    </span>
+                </div>
+            }
+
+            <div class="creator-details">
+                <h2>@Model.FirstCreator.DisplayName</h2>
+                <p class="creator-tagline">
+                    @(string.IsNullOrWhiteSpace(Model.FirstCreator.Tagline)
+                                        ? "Meet this creator"
+                                        : Model.FirstCreator.Tagline)
+                </p>
+
+                <a class="btn btn-outline-light btn-sm mb-3"
+                   asp-controller="Home"
+                   asp-action="Index"
+                   asp-route-search="@Model.FirstCreator.DisplayName">
+                    Explore creator
+                </a>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form asp-controller="Voting" asp-action="Vote" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="firstCreatorId"
+                               value="@Model.FirstCreator.Id" />
+                        <input type="hidden" name="secondCreatorId"
+                               value="@Model.SecondCreator.Id" />
+                        <input type="hidden" name="selectedCreatorId"
+                               value="@Model.FirstCreator.Id" />
+
+                        <button class="vote-button" type="submit">
+                            Vote for @Model.FirstCreator.DisplayName
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a class="vote-button d-block text-decoration-none"
+                       asp-controller="Account"
+                       asp-action="Login"
+                       asp-route-returnUrl="@Url.Action("Index", "Voting")">
+                        Sign in to vote
+                    </a>
+                }
+            </div>
+        </article>
+
+        <article class="creator-card">
+            @if (!string.IsNullOrWhiteSpace(Model.SecondCreator.ProfileImageUrl))
+            {
+                <img class="creator-photo"
+                     src="@Model.SecondCreator.ProfileImageUrl"
+                     alt="@Model.SecondCreator.DisplayName"
+                     loading="lazy" />
+            }
+            else
+            {
+                <div class="creator-photo d-flex align-items-center justify-content-center">
+                    <span class="display-1 fw-bold">
+                        @Model.SecondCreator.DisplayName.Substring(0, 1)
+                    </span>
+                </div>
+            }
+
+            <div class="creator-details">
+                <h2>@Model.SecondCreator.DisplayName</h2>
+                <p class="creator-tagline">
+                    @(string.IsNullOrWhiteSpace(Model.SecondCreator.Tagline)
+                                        ? "Meet this creator"
+                                        : Model.SecondCreator.Tagline)
+                </p>
+
+                <a class="btn btn-outline-light btn-sm mb-3"
+                   asp-controller="Home"
+                   asp-action="Index"
+                   asp-route-search="@Model.SecondCreator.DisplayName">
+                    Explore creator
+                </a>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form asp-controller="Voting" asp-action="Vote" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="firstCreatorId"
+                               value="@Model.FirstCreator.Id" />
+                        <input type="hidden" name="secondCreatorId"
+                               value="@Model.SecondCreator.Id" />
+                        <input type="hidden" name="selectedCreatorId"
+                               value="@Model.SecondCreator.Id" />
+
+                        <button class="vote-button" type="submit">
+                            Vote for @Model.SecondCreator.DisplayName
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a class="vote-button d-block text-decoration-none"
+                       asp-controller="Account"
+                       asp-action="Login"
+                       asp-route-returnUrl="@Url.Action("Index", "Voting")">
+                        Sign in to vote
+                    </a>
+                }
+            </div>
+        </article>
+    </div>
+
+    <div class="versus">VS</div>
+
+
+    <div class="leaderboard-box">
+        <h3>🏆 Creator Leaderboard</h3>
+
+        <p>
+            See who's leading the rankings and discover
+            which creators are winning the community's votes.
+        </p>
+
+        <a asp-controller="Voting"
+           asp-action="Leaderboard"
+           class="leaderboard-button">
+            View leaderboard
+            <span aria-hidden="true">→</span>
+        </a>
+    </div>
+
+</div>

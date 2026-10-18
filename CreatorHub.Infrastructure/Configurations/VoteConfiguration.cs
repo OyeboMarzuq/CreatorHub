@@ -1,23 +1,47 @@
-﻿using CreatorHub.Domain.Entities;
+﻿
+using CreatorHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CreatorHub.Infrastructure.Configurations
+namespace CreatorHub.Infrastructure.Configurations;
+
+public class VoteConfiguration : IEntityTypeConfiguration<Vote>
 {
-    public class VoteConfiguration : IEntityTypeConfiguration<Vote>
+    public void Configure(EntityTypeBuilder<Vote> builder)
     {
-        public void Configure(EntityTypeBuilder<Vote> builder)
+        builder.HasKey(x => x.Id);
+
+        builder.HasIndex(x => x.CreatedAt);
+
+        builder.HasIndex(x => x.SelectedCreatorId);
+
+        // A user can vote only once for a canonically ordered matchup.
+        builder.HasIndex(x => new
         {
-            builder.HasKey(x => x.Id);
+            x.UserId,
+            x.FirstCreatorId,
+            x.SecondCreatorId
+        })
+        .IsUnique();
 
-            builder.HasIndex(x => x.CreatedAt);
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasIndex(x => x.SelectedCreatorId);
-        }
+        builder.HasOne<Creator>()
+            .WithMany()
+            .HasForeignKey(x => x.FirstCreatorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<Creator>()
+            .WithMany()
+            .HasForeignKey(x => x.SecondCreatorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne<Creator>()
+            .WithMany()
+            .HasForeignKey(x => x.SelectedCreatorId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

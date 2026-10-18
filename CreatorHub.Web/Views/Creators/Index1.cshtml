@@ -1,0 +1,1351 @@
+﻿
+@{
+    ViewData["Title"] = "Creator Navigator | CreatorHub";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <title>@ViewData["Title"]</title>
+
+    <script>
+        (function () {
+            try {
+                const saved = localStorage.getItem("creatorhub-theme");
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    saved === "light" ? "light" : "dark"
+                );
+            } catch {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+
+    <style>
+        :root {
+            --red: #E10600;
+            --red-dark: #B80500;
+            --black: #0A0A0A;
+            --white: #FFFFFF;
+            --font-display: 'Anton', Impact, sans-serif;
+            --font-body: 'Manrope', Arial, sans-serif;
+        }
+
+        html[data-theme="dark"] {
+            --page: #101010;
+            --surface: #191919;
+            --surface-hover: #222222;
+            --text: #F5F5F5;
+            --muted: #A9A9A9;
+            --border: #353535;
+            --field: #202020;
+            --soft: #292929;
+            --chip: #242424;
+            color-scheme: dark;
+        }
+
+        html[data-theme="light"] {
+            --page: #F3F3F3;
+            --surface: #FFFFFF;
+            --surface-hover: #F7F7F7;
+            --text: #111111;
+            --muted: #696969;
+            --border: #E1E1E1;
+            --field: #FFFFFF;
+            --soft: #ECECEC;
+            --chip: #F1F1F1;
+            color-scheme: light;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 14px;
+            line-height: 1.6;
+            transition: background .2s, color .2s;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            min-height: 72px;
+            padding: 14px 5%;
+            background: #0A0A0A;
+            color: #FFFFFF;
+            border-bottom: 1px solid #303030;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: -.7px;
+            white-space: nowrap;
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            background: var(--red);
+            color: #FFFFFF;
+            font-family: var(--font-display);
+            font-size: 21px;
+        }
+
+        .brand span span {
+            color: #FF413B;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: #BFBFBF;
+            font-size: 12px;
+            font-weight: 800;
+            transition: color .2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #FFFFFF;
+        }
+
+        .nav-links a.active {
+            border-bottom: 2px solid var(--red);
+            padding-bottom: 7px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 40px;
+            padding: 8px 12px;
+            background: #1B1B1B;
+            border: 1px solid #444444;
+            border-radius: 4px;
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .theme-toggle:hover {
+            border-color: #999999;
+        }
+
+        .nav-home {
+            padding: 10px 13px;
+            border: 1px solid #454545;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 54px 5% 48px;
+            background: var(--red);
+            color: #FFFFFF;
+        }
+
+        .hero::after {
+            content: "CH";
+            position: absolute;
+            top: -76px;
+            right: 3%;
+            font-family: var(--font-display);
+            font-size: clamp(180px, 25vw, 340px);
+            line-height: 1;
+            opacity: .075;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #FFFFFF;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-family: var(--font-display);
+            font-size: clamp(45px, 7vw, 78px);
+            font-weight: 400;
+            line-height: .98;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            max-width: 580px;
+            margin: 18px 0 0;
+            color: #FFE0DF;
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .hero-bottom {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .hero-note {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .main {
+            width: min(1440px, 100%);
+            margin: auto;
+            padding: 32px 5% 64px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.7px;
+        }
+
+        .section-heading p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .count-label {
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .search-panel {
+            margin-bottom: 26px;
+            padding: 22px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+        }
+
+        .search-main {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 19px;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            min-height: 50px;
+            padding: 13px 15px 13px 43px;
+            background: var(--field);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            outline: none;
+        }
+
+        .search-input:focus,
+        .filter-field:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 2px #E106001A;
+        }
+
+        .search-input::placeholder {
+            color: var(--muted);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 11px 18px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            transition: background .2s, border-color .2s;
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: var(--red-dark);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: .55;
+        }
+
+        .filter-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 22px 0 12px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .filter-heading strong {
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .text-button {
+            padding: 5px 0;
+            border: 0;
+            background: transparent;
+            color: var(--red);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .platform-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .platform-chip {
+            min-height: 36px;
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--chip);
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .platform-chip:hover {
+            border-color: var(--red);
+            color: var(--text);
+        }
+
+        .platform-chip.active {
+            background: var(--red);
+            border-color: var(--red);
+            color: #FFFFFF;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 13px;
+        }
+
+        .filter-group {
+            min-width: 0;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        .filter-field {
+            width: 100%;
+            min-height: 42px;
+            padding: 9px 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            outline: none;
+            background: var(--field);
+            color: var(--text);
+            font-size: 12px;
+        }
+
+        .age-fields {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .age-fields .filter-field {
+            min-width: 0;
+        }
+
+        .age-separator {
+            color: var(--muted);
+        }
+
+        .filter-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 9px;
+            margin-top: 18px;
+        }
+
+        .results-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 30px 0 17px;
+        }
+
+        .results-toolbar h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.6px;
+        }
+
+        .results-toolbar p {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .sort-select {
+            min-height: 39px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 11px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .creator-card {
+            min-width: 0;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            transition: transform .18s, border-color .18s;
+        }
+
+        .creator-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--red);
+        }
+
+        .creator-image-wrap {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4 / 4.5;
+            background: var(--soft);
+        }
+
+        .creator-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .3s;
+        }
+
+        .creator-card:hover .creator-image {
+            transform: scale(1.035);
+        }
+
+        .image-fallback {
+            display: grid;
+            place-items: center;
+            width: 100%;
+            height: 100%;
+            background: var(--soft);
+            color: var(--muted);
+            font-family: var(--font-display);
+            font-size: 64px;
+        }
+
+        .platform-badge {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            max-width: calc(100% - 20px);
+            overflow: hidden;
+            padding: 6px 9px;
+            border-radius: 3px;
+            background: var(--red);
+            color: #FFFFFF;
+            font-size: 9px;
+            font-weight: 800;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .creator-info {
+            padding: 14px;
+        }
+
+        .creator-name {
+            overflow: hidden;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 800;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .creator-username {
+            overflow: hidden;
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 11px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .creator-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 11px;
+        }
+
+        .meta-tag {
+            padding: 4px 7px;
+            border-radius: 3px;
+            background: var(--soft);
+            color: var(--muted);
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        .creator-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            color: var(--red);
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .creator-link:hover {
+            color: var(--red-dark);
+        }
+
+        .state-panel {
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+            border: 1px dashed var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            text-align: center;
+        }
+
+        .state-icon {
+            display: grid;
+            place-items: center;
+            width: 54px;
+            height: 54px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: var(--soft);
+            font-size: 24px;
+        }
+
+        .state-panel h3 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .state-panel p {
+            max-width: 440px;
+            margin: 8px auto 18px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--red);
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+
+        @@keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .results-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 28px;
+        }
+
+        .footer {
+            padding: 25px 5%;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            max-width: 1440px;
+            margin: auto;
+        }
+
+        .footer-brand {
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @@media (max-width: 1100px) {
+            .results-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .filters-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .nav-links {
+                gap: 14px;
+            }
+        }
+
+        @@media (max-width: 760px) {
+            .navbar {
+                flex-wrap: wrap;
+                gap: 13px;
+                padding: 12px 4%;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                padding-top: 6px;
+            }
+
+            .nav-actions {
+                margin-left: auto;
+            }
+
+            .hero {
+                padding: 42px 5%;
+            }
+
+            .main {
+                padding: 25px 4% 45px;
+            }
+
+            .search-panel {
+                padding: 16px;
+            }
+
+            .results-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .filters-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .creator-info {
+                padding: 11px;
+            }
+
+            .creator-name {
+                font-size: 12px;
+            }
+        }
+
+        @@media (max-width: 430px) {
+            .brand {
+                font-size: 16px;
+            }
+
+            .theme-toggle {
+                padding: 8px 9px;
+            }
+
+            .nav-home {
+                display: none;
+            }
+
+            .search-main {
+                flex-direction: column;
+            }
+
+            .search-main .btn {
+                width: 100%;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .results-grid {
+                gap: 9px;
+            }
+
+            .creator-info {
+                padding: 9px;
+            }
+
+            .platform-badge {
+                left: 6px;
+                bottom: 6px;
+                font-size: 8px;
+            }
+
+            .hero h1 {
+                font-size: 44px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <a class="brand" href="@Url.Action("Index", "Home")" aria-label="CreatorHub homepage">
+            <span class="brand-mark">C</span>
+            <span>CREATOR<span>HUB</span></span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+            <a href="@Url.Action("Index", "Home")">Home</a>
+            <a href="@Url.Action("Index", "Creators")" class="active">Creator Navigator</a>
+        </nav>
+
+        <div class="nav-actions">
+            <button type="button"
+                    class="theme-toggle"
+                    id="themeToggle"
+                    aria-pressed="false">
+                <span id="themeIcon" aria-hidden="true">☀</span>
+                <span id="themeLabel">Light mode</span>
+            </button>
+            <a class="nav-home" href="@Url.Action("Index", "Home")">Homepage ↗</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                CREATOR DISCOVERY DIRECTORY
+            </div>
+
+            <h1>Creator<br />Navigator.</h1>
+
+            <p>
+                Discover creators across supported platforms. Search usernames,
+                explore profiles, and narrow your results with the available filters.
+            </p>
+
+            <div class="hero-bottom">
+                <span class="hero-note">Search. Discover. Explore.</span>
+                <span class="hero-note">CREATORHUB DIRECTORY</span>
+            </div>
+        </div>
+    </section>
+
+    <main class="main">
+        <div class="section-heading">
+            <div>
+                <h2>Find a creator</h2>
+                <p>Search the imported directory or refine your results.</p>
+            </div>
+            <span class="count-label" id="resultCount">Ready to search</span>
+        </div>
+
+        <section class="search-panel" aria-label="Creator search and filters">
+            <form id="searchForm">
+                <div class="search-main">
+                    <div class="search-input-wrap">
+                        <label class="sr-only" for="searchQuery">Search creators</label>
+                        <span class="search-icon" aria-hidden="true">⌕</span>
+                        <input class="search-input"
+                               id="searchQuery"
+                               name="q"
+                               type="search"
+                               maxlength="100"
+                               placeholder="Search username, creator name, or profile URL..."
+                               autocomplete="off" />
+                    </div>
+
+                    <button class="btn btn-primary" id="searchButton" type="submit">
+                        Search creators →
+                    </button>
+                </div>
+
+                <div class="filter-heading">
+                    <strong>PLATFORM</strong>
+                    <button class="text-button" type="button" id="clearFiltersTop">
+                        Reset filters
+                    </button>
+                </div>
+
+                <div class="platform-list" id="platformList">
+                    <button class="platform-chip active" type="button" data-platform="ALL">All platforms</button>
+                    <button class="platform-chip" type="button" data-platform="MDH">MDH</button>
+                    <button class="platform-chip" type="button" data-platform="Big7">Big7</button>
+                    <button class="platform-chip" type="button" data-platform="Frivol">Frivol</button>
+                    <button class="platform-chip" type="button" data-platform="Amateur">Amateur</button>
+                </div>
+
+                <div class="filter-heading">
+                    <strong>ADVANCED FILTERS</strong>
+                    <span class="count-label">Optional</span>
+                </div>
+
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="genderFilter">Gender</label>
+                        <select class="filter-field" id="genderFilter" name="gender">
+                            <option value="">Any gender</option>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Age range</label>
+                        <div class="age-fields">
+                            <input class="filter-field"
+                                   id="ageMin"
+                                   type="number"
+                                   min="18"
+                                   max="120"
+                                   placeholder="Min"
+                                   aria-label="Minimum age" />
+                            <span class="age-separator">–</span>
+                            <input class="filter-field"
+                                   id="ageMax"
+                                   type="number"
+                                   min="18"
+                                   max="120"
+                                   placeholder="Max"
+                                   aria-label="Maximum age" />
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="hairColorFilter">Hair color</label>
+                        <select class="filter-field" id="hairColorFilter">
+                            <option value="">Any color</option>
+                            <option value="Blonde">Blonde</option>
+                            <option value="Brown">Brown</option>
+                            <option value="Black">Black</option>
+                            <option value="Red">Red</option>
+                            <option value="Brunette">Brunette</option>
+                            <option value="Gray">Gray</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="hairLengthFilter">Hair length</label>
+                        <select class="filter-field" id="hairLengthFilter">
+                            <option value="">Any length</option>
+                            <option value="Short">Short</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Long">Long</option>
+                            <option value="Very long">Very long</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="regionFilter">Region</label>
+                        <input class="filter-field"
+                               id="regionFilter"
+                               type="text"
+                               maxlength="80"
+                               placeholder="Enter region" />
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button class="btn btn-primary" type="submit">
+                        Apply filters →
+                    </button>
+                    <button class="btn btn-secondary" type="button" id="clearFilters">
+                        Clear all
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section aria-labelledby="resultsHeading">
+            <div class="results-toolbar">
+                <div>
+                    <h2 id="resultsHeading">Creator results</h2>
+                    <p id="resultsDescription">Enter a search term or browse a platform to get started.</p>
+                </div>
+
+                <label>
+                    <span class="sr-only">Sort results</span>
+                    <select class="sort-select" id="sortSelect">
+                        <option value="default">Default order</option>
+                        <option value="name">Username A–Z</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="results-grid" id="resultsGrid" aria-live="polite">
+                <div class="state-panel">
+                    <div class="state-icon" aria-hidden="true">⌕</div>
+                    <h3>Start discovering</h3>
+                    <p>
+                        Enter a username or search term, select a platform,
+                        or use the filters to find matching creators.
+                    </p>
+                </div>
+            </div>
+
+            <div class="results-footer">
+                <button class="btn btn-secondary" id="loadMoreButton" type="button" hidden>
+                    Load more results
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <span class="footer-brand">CREATORHUB</span>
+            <span>Creator Navigator · Discover creators across supported platforms.</span>
+        </div>
+    </footer>
+
+    <script>
+        (() => {
+            "use strict";
+
+
+        const searchUrl = '@Url.Action("Search", "Creators")';
+                ));
+
+                const meta = document.createElement("div");
+                meta.className = "creator-meta";
+
+                if (item.age !== null && item.age !== undefined && item.age !== "") {
+                    addMetaTag(meta, item.age + " years");
+                }
+
+                addMetaTag(meta, item.gender);
+                addMetaTag(meta, item.city);
+                addMetaTag(meta, item.region);
+                addMetaTag(meta, item.country);
+
+                const link = document.createElement("a");
+                link.className = "creator-link";
+
+                const externalUrl = safeExternalUrl(item.url);
+
+                if (externalUrl) {
+                    link.href = externalUrl;
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    link.innerHTML = "<span>Visit profile</span><span aria-hidden='true'>↗</span>";
+                } else {
+                    link.href = "#";
+                    link.innerHTML = "<span>Profile link unavailable</span><span aria-hidden='true'>—</span>";
+                    link.addEventListener("click", event => event.preventDefault());
+                }
+
+                info.append(name, usernameElement, meta, link);
+                card.append(imageWrap, info);
+
+                return card;
+            }
+
+            function renderResults(items, append = false) {
+                if (!append) {
+                    resultsGrid.replaceChildren();
+                }
+
+                if (!items.length && !append) {
+                    resultsGrid.appendChild(
+                        makeState(
+                            "⌕",
+                            "No creators found",
+                            "Try a different username, platform, or combination of filters."
+                        )
+                    );
+                } else {
+                    items.forEach(item => resultsGrid.appendChild(createCreatorCard(item)));
+                }
+
+                resultCount.textContent = state.results.length + " result" +
+                    (state.results.length === 1 ? "" : "s");
+
+                resultsDescription.textContent = state.results.length
+                    ? "Showing matching profiles from the selected directory."
+                    : "No matching profiles were returned.";
+
+                loadMoreButton.hidden = !state.hasMore;
+            }
+
+            function getSearchParameters() {
+                const params = new URLSearchParams();
+                const query = queryInput.value.trim();
+
+                if (query) params.set("q", query);
+                params.set("platform", state.platform);
+
+                if (genderFilter.value) params.set("gender", genderFilter.value);
+                if (ageMinFilter.value) params.set("ageMin", ageMinFilter.value);
+                if (ageMaxFilter.value) params.set("ageMax", ageMaxFilter.value);
+                if (hairColorFilter.value) params.set("hairColor", hairColorFilter.value);
+                if (hairLengthFilter.value) params.set("hairLength", hairLengthFilter.value);
+                if (regionFilter.value.trim()) params.set("region", regionFilter.value.trim());
+
+                return params;
+            }
+
+            async function searchCreators(append = false) {
+                if (state.loading) return;
+
+                if (!append) {
+                    state.offset = 0;
+                    state.results = [];
+                }
+
+                const params = getSearchParameters();
+
+                // The current controller returns at most 100 items per request.
+                // Its endpoint does not yet support offset-based pagination.
+                if (append) {
+                    loadMoreButton.hidden = true;
+                    resultsDescription.textContent =
+                        "Your controller currently returns up to 100 results per search.";
+                    return;
+                }
+
+                setLoading(true);
+                state.searched = true;
+
+                resultsGrid.replaceChildren(
+                    makeState("…", "Searching creators", "Please wait while CreatorHub searches the directory.")
+                );
+                resultCount.textContent = "Searching...";
+
+                try {
+                    const response = await fetch(searchUrl + "?" + params.toString(), {
+                        method: "GET",
+                        headers: { "Accept": "application/json" },
+                        credentials: "same-origin"
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Search request failed with status " + response.status);
+                    }
+
+                    const payload = await response.json();
+
+                    if (payload.success !== true || !Array.isArray(payload.results)) {
+                        throw new Error(payload.message || "The server returned an unexpected response.");
+                    }
+
+                    state.results = payload.results;
+                    state.offset = state.results.length;
+                    state.hasMore = false;
+
+                    if (sortSelect.value === "name") {
+                        state.results.sort((a, b) =>
+                            normalizeText(a.username || a.displayName)
+                                .localeCompare(normalizeText(b.username || b.displayName))
+                        );
+                    }
+
+                    renderResults(state.results);
+                } catch (error) {
+                    console.error("Creator Navigator search failed:", error);
+
+                    resultsGrid.replaceChildren(
+                        makeState(
+                            "!",
+                            "Unable to load creators",
+                            "The search request failed. Check your connection and try again. If it continues, check the application logs and database connection.",
+                            true
+                        )
+                    );
+
+                    resultCount.textContent = "Search failed";
+                    resultsDescription.textContent = "Creator search could not be completed.";
+                    loadMoreButton.hidden = true;
+                } finally {
+                    setLoading(false);
+                }
+            }
+
+            document.querySelectorAll("[data-platform]").forEach(button => {
+                button.addEventListener("click", () => {
+                    state.platform = button.dataset.platform || "ALL";
+
+                    document.querySelectorAll("[data-platform]").forEach(chip => {
+                        const selected = chip === button;
+                        chip.classList.toggle("active", selected);
+                        chip.setAttribute("aria-pressed", String(selected));
+                    });
+
+                    searchCreators(false);
+                });
+            });
+
+            form.addEventListener("submit", event => {
+                event.preventDefault();
+
+                if (ageMinFilter.value && ageMaxFilter.value &&
+                    Number(ageMinFilter.value) > Number(ageMaxFilter.value)) {
+                    alert("Minimum age cannot be greater than maximum age.");
+                    return;
+                }
+
+                searchCreators(false);
+            });
+
+            function clearFilters() {
+                queryInput.value = "";
+                genderFilter.value = "";
+                ageMinFilter.value = "";
+                ageMaxFilter.value = "";
+                hairColorFilter.value = "";
+                hairLengthFilter.value = "";
+                regionFilter.value = "";
+
+                state.platform = "ALL";
+
+                document.querySelectorAll("[data-platform]").forEach(chip => {
+                    const selected = chip.dataset.platform === "ALL";
+                    chip.classList.toggle("active", selected);
+                    chip.setAttribute("aria-pressed", String(selected));
+                });
+
+                resultsGrid.replaceChildren(
+                    makeState(
+                        "⌕",
+                        "Start discovering",
+                        "Enter a search term or select a platform to find matching creators."
+                    )
+                );
+
+                resultCount.textContent = "Ready to search";
+                resultsDescription.textContent =
+                    "Enter a search term or browse a platform to get started.";
+                state.results = [];
+                state.searched = false;
+                state.hasMore = false;
+                loadMoreButton.hidden = true;
+            }
+
+            document.getElementById("clearFilters").addEventListener("click", clearFilters);
+            document.getElementById("clearFiltersTop").addEventListener("click", clearFilters);
+
+            loadMoreButton.addEventListener("click", () => {
+                // Offset pagination must be added to the controller before
+                // loading results beyond the first 100 is supported.
+                loadMoreButton.hidden = true;
+            });
+
+            sortSelect.addEventListener("change", () => {
+                if (sortSelect.value === "name") {
+                    state.results.sort((a, b) =>
+                        normalizeText(a.username || a.displayName)
+                            .localeCompare(normalizeText(b.username || b.displayName))
+                    );
+                }
+
+                if (state.searched) {
+                    renderResults(state.results);
+                }
+            });
+
+            const themeToggle = document.getElementById("themeToggle");
+            const themeIcon = document.getElementById("themeIcon");
+            const themeLabel = document.getElementById("themeLabel");
+
+            function applyTheme(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+
+                const isDark = theme === "dark";
+                themeIcon.textContent = isDark ? "☀" : "☾";
+                themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
+                themeToggle.setAttribute("aria-pressed", String(!isDark));
+                themeToggle.setAttribute(
+                    "aria-label",
+                    isDark ? "Switch to light mode" : "Switch to dark mode"
+                );
+
+                try {
+                    localStorage.setItem("creatorhub-theme", theme);
+                } catch {
+                    // Theme still works for the current page if storage is unavailable.
+                }
+            }
+
+            applyTheme(
+                document.documentElement.getAttribute("data-theme") === "light"
+                    ? "light"
+                    : "dark"
+            );
+
+            themeToggle.addEventListener("click", () => {
+                const current = document.documentElement.getAttribute("data-theme");
+                applyTheme(current === "dark" ? "light" : "dark");
+            });
+        })();
+    </script>
+</body>
+</html>

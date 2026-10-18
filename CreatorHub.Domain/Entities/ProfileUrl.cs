@@ -20,6 +20,9 @@ namespace CreatorHub.Domain.Entities
 
         public bool IsProcessed { get; set; }
 
+        // New: nullable image URL discovered during import/crawling
+        public string? ImageUrl { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? ProcessedAt { get; set; }

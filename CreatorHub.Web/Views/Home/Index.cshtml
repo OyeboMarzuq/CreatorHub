@@ -1,13 +1,40 @@
-﻿@{
-    ViewData["Title"] = "CreatorHub | Where creators get discovered";
+﻿@using System.Globalization
+@using System.Text.Json
+
+@{
+    var isGerman = CultureInfo.CurrentUICulture.Name.StartsWith(
+        "de", StringComparison.OrdinalIgnoreCase);
+
+    ViewData["Title"] = isGerman
+        ? "CreatorHub | Wo Creator entdeckt werden"
+        : "CreatorHub | Where creators get discovered";
+
     Layout = null;
 }
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@(isGerman ? "de" : "en")">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="@(isGerman
+                                     ? "Entdecke Creator auf BIG7, Frivol, MDH und weiteren Plattformen mit CreatorHub."
+                                     : "Discover creators across BIG7, Frivol, MDH and more with CreatorHub.")" />
     <title>@ViewData["Title"]</title>
+
+    <script>
+        (function () {
+            try {
+                const saved = localStorage.getItem("creatorhub-theme");
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    saved === "light" ? "light" : "dark"
+                );
+            } catch {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -86,7 +113,7 @@
             letter-spacing: -.01em;
         }
 
-        /* HERO AND NAVIGATION */
+        /* Hero and navigation */
 
         .hero {
             background: var(--red);
@@ -131,8 +158,7 @@
                 transition: border-color .2s;
             }
 
-                .links a:hover,
-                .links a.on {
+                .links a:hover, .links a.on {
                     border-color: var(--white);
                 }
 
@@ -172,6 +198,43 @@
             .join:hover {
                 background: var(--white);
                 color: var(--black);
+            }
+
+        .home-language-switch {
+            display: inline-flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+            .home-language-switch button {
+                padding: 10px 12px;
+                border: 1px solid rgba(255,255,255,.65);
+                color: #fff;
+                font-size: 12px;
+                font-weight: 800;
+            }
+
+                .home-language-switch button[aria-pressed="true"] {
+                    background: var(--black);
+                    border-color: var(--black);
+                }
+
+        .home-theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255,255,255,.65);
+            background: rgba(0,0,0,.15);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+            .home-theme-toggle:hover {
+                background: rgba(255,255,255,.2);
             }
 
         .hero h1 {
@@ -271,7 +334,7 @@
                 border-color: var(--black);
             }
 
-        /* HERO CARDS */
+        /* Hero cards */
 
         .stack {
             position: absolute;
@@ -369,13 +432,12 @@
             margin-left: 5px;
         }
 
-        .mini:nth-child(3) .tick,
-        .mini:nth-child(2) .tick {
+        .mini:nth-child(3) .tick, .mini:nth-child(2) .tick {
             background: #fff;
             color: var(--red);
         }
 
-        /* GENERAL SECTIONS */
+        /* General sections */
 
         section {
             padding: 110px 0;
@@ -574,7 +636,7 @@
                 font-size: 18px;
             }
 
-        /* PLATFORMS */
+        /* Platforms */
 
         .dark {
             background: var(--black);
@@ -633,6 +695,7 @@
                 font-size: 13px;
                 letter-spacing: .1em;
                 margin-top: 18px;
+                display: inline-block;
             }
 
         .p1 {
@@ -661,26 +724,7 @@
                 color: var(--red);
             }
 
-        .p4 {
-            grid-column: 1 / -1;
-            background: var(--grey);
-            color: var(--black);
-            flex-direction: row;
-            align-items: flex-end;
-            gap: 30px;
-            flex-wrap: wrap;
-            min-height: 220px;
-        }
-
-            .p4 .n {
-                font-size: clamp(70px, 13vw, 190px);
-            }
-
-                .p4 .n span {
-                    color: var(--red);
-                }
-
-        /* ABOUT */
+        /* About */
 
         .msg .big {
             font-size: clamp(60px, 11vw, 160px);
@@ -717,7 +761,7 @@
                 max-width: 300px;
             }
 
-        /* CALL TO ACTION AND FOOTER */
+        /* Call to action and footer */
 
         .cta {
             background: var(--red);
@@ -800,7 +844,108 @@
             font-size: 14px;
         }
 
-        /* TABLET */
+        /* Dark theme */
+
+        html[data-theme="dark"] body {
+            background: #101010;
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] #creators,
+        html[data-theme="dark"] .msg {
+            background: #101010;
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] #results {
+            background: #151515;
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] .rmeta,
+        html[data-theme="dark"] .cb .u {
+            color: #b8b8b8;
+        }
+
+        html[data-theme="dark"] .card {
+            background: #191919;
+            color: #f8fafc;
+            border-color: #414141;
+        }
+
+            html[data-theme="dark"] .card:hover {
+                box-shadow: 8px 8px 0 var(--red);
+            }
+
+        html[data-theme="dark"] .ph.w {
+            background: #292929;
+            color: #f87171;
+        }
+
+            html[data-theme="dark"] .ph.w img {
+                background: #292929;
+            }
+
+        html[data-theme="dark"] .p2 {
+            background: #242424;
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] .p3 {
+            background: #171717;
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] .p4 {
+            background: #242424;
+            color: #f8fafc;
+        }
+
+        html[data-theme="dark"] .three {
+            border-top-color: #555;
+        }
+
+        html[data-theme="dark"] :focus-visible {
+            outline-color: #f87171;
+        }
+
+        html[data-theme="dark"] .search {
+            background: #202020;
+            color: #fff;
+        }
+
+            html[data-theme="dark"] .search input {
+                color: #fff;
+            }
+
+                html[data-theme="dark"] .search input::placeholder {
+                    color: #b8b8b8;
+                    opacity: 1;
+                }
+
+            html[data-theme="dark"] .search button {
+                background: #050505;
+                color: #fff;
+            }
+
+                html[data-theme="dark"] .search button:hover {
+                    background: #b80500;
+                }
+
+        html[data-theme="dark"] .filters .f {
+            color: #fff;
+        }
+
+            html[data-theme="dark"] .filters .f[aria-pressed="true"] {
+                background: #050505;
+                border-color: #050505;
+            }
+
+        html[data-theme="dark"] .empty {
+            color: #f8fafc;
+        }
+
+        /* Tablet */
 
         @@media (max-width: 960px) {
             nav {
@@ -865,7 +1010,7 @@
             }
         }
 
-        /* MOBILE NAVIGATION AND LAYOUT */
+        /* Mobile */
 
         @@media (max-width: 560px) {
             .wrap {
@@ -896,6 +1041,15 @@
                     font-size: 10px;
                     white-space: normal;
                 }
+
+            .home-language-switch {
+                flex: 1 1 auto;
+            }
+
+            .home-theme-toggle {
+                flex: 1 1 100%;
+                padding: 9px;
+            }
 
             .hero h1 {
                 margin-top: 42px;
@@ -1056,66 +1210,126 @@
 <body>
     <header class="hero" id="home">
         <div class="wrap">
-            <nav aria-label="Main navigation">
+            <nav aria-label="@(isGerman ? "Hauptnavigation" : "Main navigation")">
                 <a href="#home" class="logo">Creator<i>Hub</i></a>
 
                 <div class="links">
-                    <a href="#home" class="on">Home</a>
-                    <a href="#creators">Creators</a>
-                    <a href="#platforms">Platforms</a>
-                    <a href="#about">About</a>
+                    <a href="#home" class="on">@(isGerman ? "Startseite" : "Home")</a>
+                    <a href="#creators">@(isGerman ? "Creator" : "Creators")</a>
+                    <a asp-controller="Voting" asp-action="Index">
+                        @(isGerman ? "Abstimmen & Rangliste" : "Vote & Rank")
+                    </a>
+                    <a href="#platforms">@(isGerman ? "Plattformen" : "Platforms")</a>
+                    <a href="#about">@(isGerman ? "Über uns" : "About")</a>
                 </div>
 
                 <div class="nav-actions">
+                    <form asp-controller="Language"
+                          asp-action="SetLanguage"
+                          method="post"
+                          class="home-language-switch">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden"
+                               name="returnUrl"
+                               value="@(Context.Request.Path + Context.Request.QueryString)" />
+
+                        <button type="submit"
+                                name="culture"
+                                value="de-DE"
+                                aria-pressed="@(isGerman ? "true" : "false")"
+                                aria-label="Deutsch">
+                            DE
+                        </button>
+
+                        <button type="submit"
+                                name="culture"
+                                value="en-US"
+                                aria-pressed="@(!isGerman ? "true" : "false")"
+                                aria-label="English">
+                            EN
+                        </button>
+                    </form>
+
+                    <button type="button"
+                            id="homeThemeToggle"
+                            class="home-theme-toggle"
+                            aria-label="@(isGerman ? "Zum hellen Modus wechseln" : "Switch to light mode")"
+                            aria-pressed="false">
+                        <span id="homeThemeIcon" aria-hidden="true">☀️</span>
+                        <span id="homeThemeLabel">@(isGerman ? "Heller Modus" : "Light Mode")</span>
+                    </button>
+
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-controller="Home" asp-action="Dashboard" class="admin-link">Dashboard</a>
+                        <a asp-controller="Home"
+                           asp-action="Dashboard"
+                           class="admin-link">
+                            @(isGerman ? "Dashboard" : "Dashboard")
+                        </a>
                     }
                     else if (User.Identity?.IsAuthenticated != true)
                     {
                         <a asp-controller="Account"
                            asp-action="Login"
                            asp-route-returnUrl="/Home/Dashboard"
-                           class="admin-link">Admin Sign In</a>
+                           class="admin-link">
+                            @(isGerman ? "Admin-Anmeldung" : "Admin Sign In")
+                        </a>
                     }
 
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <a asp-controller="Account" asp-action="ChangePassword" class="join">My Account</a>
+                        <a asp-controller="Account"
+                           asp-action="ChangePassword"
+                           class="join">
+                            @(isGerman ? "Mein Konto" : "My Account")
+                        </a>
                     }
                     else
                     {
-                        <a asp-controller="Account" asp-action="Register" class="join">Join CreatorHub</a>
+                        <a asp-controller="Account"
+                           asp-action="Register"
+                           class="join">
+                            @(isGerman ? "CreatorHub beitreten" : "Join CreatorHub")
+                        </a>
                     }
                 </div>
             </nav>
 
             <h1 class="cond">
-                <span class="l1">Where creators</span>
-                <span class="l2 ital">get discovered.</span>
+                <span class="l1">@(isGerman ? "Creator entdecken" : "Where creators")</span>
+                <span class="l2 ital">@(isGerman ? "leicht gemacht." : "get discovered.")</span>
             </h1>
 
             <p class="lede">
-                Discover creators, explore their profiles, and find the people worth following across BIG7, Frivol, MDH and Amateur.
+                @(isGerman
+                                ? "Entdecke Creator, erkunde ihre Profile und finde interessante Persönlichkeiten auf BIG7, Frivol, MDH und Amateur."
+                                : "Discover creators, explore their profiles, and find the people worth following across BIG7, Frivol, MDH and Amateur.")
             </p>
 
             <form class="search" id="searchForm" role="search" autocomplete="off">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
                     <circle cx="10.5" cy="10.5" r="6.5" />
                     <path d="m20 20-4.9-4.9" />
                 </svg>
-                <input id="q" type="search"
-                       placeholder="Search creators, usernames, categories..."
-                       aria-label="Search creators, usernames, categories or platforms" />
-                <button type="submit">SEARCH</button>
+
+                <input id="q"
+                       type="search"
+                       placeholder="@(isGerman ? "Creator, Benutzernamen, Kategorien suchen..." : "Search creators, usernames, categories...")"
+                       aria-label="@(isGerman ? "Creator, Benutzernamen, Kategorien oder Plattformen suchen" : "Search creators, usernames, categories or platforms")" />
+
+                <button type="submit">@(isGerman ? "SUCHEN" : "SEARCH")</button>
             </form>
 
-            <div class="filters" role="group" aria-label="Filter by platform">
-                <button type="button" class="f" data-p="ALL" aria-pressed="true">ALL</button>
+            <div class="filters" role="group"
+                 aria-label="@(isGerman ? "Nach Plattform filtern" : "Filter by platform")">
+                <button type="button" class="f" data-p="ALL" aria-pressed="true">
+                    @(isGerman ? "ALLE" : "ALL")
+                </button>
                 <button type="button" class="f" data-p="BIG7" aria-pressed="false">BIG7</button>
                 <button type="button" class="f" data-p="FRIVOL" aria-pressed="false">FRIVOL</button>
                 <button type="button" class="f" data-p="MDH" aria-pressed="false">MDH</button>
-                @* <button type="button" class="f" data-p="AMATEUR" aria-pressed="false">AMATEUR</button> *@
             </div>
         </div>
 
@@ -1123,15 +1337,24 @@
             <div class="wrap">
                 <div class="mini">
                     <div class="av r">AO</div>
-                    <div><b>Amara dressy<span class="tick">✓</span></b><small>@@amaraglow</small><small>BIG7</small></div>
+                    <div>
+                        <b>Amara dressy<span class="tick">✓</span></b>
+                        <small>@@amaraglow</small><small>BIG7</small>
+                    </div>
                 </div>
                 <div class="mini">
                     <div class="av r">ZL</div>
-                    <div><b>Annabelle<span class="tick">✓</span></b><small>@@anna.beats</small><small>FRIVOL</small></div>
+                    <div>
+                        <b>Annabelle<span class="tick">✓</span></b>
+                        <small>@@anna.beats</small><small>FRIVOL</small>
+                    </div>
                 </div>
                 <div class="mini">
                     <div class="av k">TA</div>
-                    <div><b>Sarah bankz<span class="tick">✓</span></b><small>@@sarah.frames</small><small>MDH</small></div>
+                    <div>
+                        <b>Sarah bankz<span class="tick">✓</span></b>
+                        <small>@@sarah.frames</small><small>MDH</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1139,70 +1362,149 @@
 
     <section id="results" aria-live="polite">
         <div class="wrap">
-            <h2 class="sec-h cond" id="rtitle">Results</h2>
+            <h2 class="sec-h cond" id="rtitle">
+                @(isGerman ? "Suchergebnisse" : "Results")
+            </h2>
             <p class="rmeta" id="rmeta"></p>
             <div class="grid" id="rgrid"></div>
+
             <div class="empty" id="empty" hidden>
-                <h3 class="cond">No creators found</h3>
-                <p>Try another creator, username or platform.</p>
+                <h3 class="cond">@(isGerman ? "Keine Creator gefunden" : "No creators found")</h3>
+                <p>
+                    @(isGerman
+                                        ? "Versuche einen anderen Namen, Benutzernamen oder eine andere Plattform."
+                                        : "Try another creator, username or platform.")
+                </p>
             </div>
         </div>
     </section>
 
     <section id="creators">
         <div class="wrap">
-            <h2 class="sec-h cond">Creators <span class="ital">to discover</span></h2>
-            <p>Use the search above to explore imported creator profiles.</p>
+            <h2 class="sec-h cond">
+                @(isGerman ? "Creator" : "Creators")
+                <span class="ital">@(isGerman ? "zum Entdecken" : "to discover")</span>
+            </h2>
+            <p>
+                @(isGerman
+                                ? "Nutze die Suche oben, um importierte Creator-Profile zu erkunden."
+                                : "Use the search above to explore imported creator profiles.")
+            </p>
         </div>
     </section>
 
     <section class="dark" id="platforms">
         <div class="wrap">
-            <h2 class="sec-h cond">Four platforms.<br /><span class="ital">One creator hub.</span></h2>
-            <p class="sub">Discover creators across the platforms that power CreatorHub.</p>
+            <h2 class="sec-h cond">
+                @(isGerman ? "Vier Plattformen." : "Four platforms.")
+                <br />
+                <span class="ital">@(isGerman ? "Ein Creator-Hub." : "One creator hub.")</span>
+            </h2>
+
+            <p class="sub">
+                @(isGerman
+                                ? "Entdecke Creator auf den Plattformen, die CreatorHub verbinden."
+                                : "Discover creators across the platforms that power CreatorHub.")
+            </p>
 
             <div class="pgrid">
                 <button type="button" class="pb p1" data-go="BIG7">
                     <span class="n">01 /<br />BIG7</span>
-                    <span><p>Creator discovery and profiles from BIG7.</p><span class="go">BROWSE BIG7</span></span>
+                    <span>
+                        <p>
+                            @(isGerman
+                                                        ? "Entdecke Creator und Profile von BIG7."
+                                                        : "Creator discovery and profiles from BIG7.")
+                        </p>
+                        <span class="go">@(isGerman ? "BIG7 DURCHSUCHEN" : "BROWSE BIG7")</span>
+                    </span>
                 </button>
 
                 <button type="button" class="pb p2" data-go="FRIVOL">
                     <span class="n">02 / <span class="ital">Frivol</span></span>
-                    <span><p>Discover creators and profiles from Frivol.</p><span class="go">BROWSE FRIVOL</span></span>
+                    <span>
+                        <p>
+                            @(isGerman
+                                                        ? "Entdecke Creator und Profile von Frivol."
+                                                        : "Discover creators and profiles from Frivol.")
+                        </p>
+                        <span class="go">@(isGerman ? "FRIVOL DURCHSUCHEN" : "BROWSE FRIVOL")</span>
+                    </span>
                 </button>
 
                 <button type="button" class="pb p3" data-go="MDH">
                     <span class="n">03 / MDH</span>
-                    <span><p>Explore creators available through MDH.</p><span class="go">BROWSE MDH</span></span>
+                    <span>
+                        <p>
+                            @(isGerman
+                                                        ? "Entdecke Creator, die auf MDH verfügbar sind."
+                                                        : "Explore creators available through MDH.")
+                        </p>
+                        <span class="go">@(isGerman ? "MDH DURCHSUCHEN" : "BROWSE MDH")</span>
+                    </span>
                 </button>
-
-                @* <button type="button" class="pb p4" data-go="AMATEUR">
-                    <span class="n"><span>04 /</span> Amateur</span>
-                    <span><p>Find and discover creators from Amateur.</p><span class="go">BROWSE AMATEUR</span></span>
-                </button> *@
             </div>
         </div>
     </section>
 
     <section class="msg" id="about">
         <div class="wrap">
-            <h2 class="big cond">Find people<span class="ital">worth following.</span></h2>
-            <p class="lede2">CreatorHub brings creators from BIG7, Frivol, MDH and Amateur into one searchable discovery experience.</p>
+            <h2 class="big cond">
+                @(isGerman ? "Finde Menschen" : "Find people")
+                <span class="ital">
+                    @(isGerman ? "die es wert sind, ihnen zu folgen." : "worth following.")
+                </span>
+            </h2>
+
+            <p class="lede2">
+                @(isGerman
+                                ? "CreatorHub vereint Creator von BIG7, Frivol, MDH und Amateur in einer durchsuchbaren Entdeckungsplattform."
+                                : "CreatorHub brings creators from BIG7, Frivol, MDH and Amateur into one searchable discovery experience.")
+            </p>
 
             <div class="three">
-                <div><h3 class="cond">Discover</h3><p>Find creators based on names, categories and platforms.</p></div>
-                <div><h3 class="cond">Explore</h3><p>View creator profiles and their platform presence.</p></div>
-                <div><h3 class="cond">Connect</h3><p>Discover where your favorite creators are active.</p></div>
+                <div>
+                    <h3 class="cond">@(isGerman ? "Entdecken" : "Discover")</h3>
+                    <p>
+                        @(isGerman
+                                                ? "Finde Creator anhand von Namen, Kategorien und Plattformen."
+                                                : "Find creators based on names, categories and platforms.")
+                    </p>
+                </div>
+                <div>
+                    <h3 class="cond">@(isGerman ? "Erkunden" : "Explore")</h3>
+                    <p>
+                        @(isGerman
+                                                ? "Sieh dir Creator-Profile und ihre Präsenz auf verschiedenen Plattformen an."
+                                                : "View creator profiles and their platform presence.")
+                    </p>
+                </div>
+                <div>
+                    <h3 class="cond">@(isGerman ? "Verbinden" : "Connect")</h3>
+                    <p>
+                        @(isGerman
+                                                ? "Finde heraus, auf welchen Plattformen deine Lieblings-Creator aktiv sind."
+                                                : "Discover where your favorite creators are active.")
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="cta">
         <div class="wrap">
-            <h2 class="cond">Who will you<span class="ital">discover next?</span></h2>
-            <p>Start exploring creators on CreatorHub.</p>
-            <a href="#home" id="ctaBtn">EXPLORE CREATORS</a>
+            <h2 class="cond">
+                @(isGerman ? "Wen wirst du" : "Who will you")
+                <span class="ital">@(isGerman ? "als Nächstes entdecken?" : "discover next?")</span>
+            </h2>
+            <p>
+                @(isGerman
+                                ? "Beginne jetzt, Creator auf CreatorHub zu entdecken."
+                                : "Start exploring creators on CreatorHub.")
+            </p>
+            <a href="#home" id="ctaBtn">
+                @(isGerman ? "CREATOR ENTDECKEN" : "EXPLORE CREATORS")
+            </a>
         </div>
     </section>
 
@@ -1210,225 +1512,475 @@
         <div class="wrap">
             <div class="fg">
                 <div><a href="#home" class="logo">Creator<i>Hub</i></a></div>
+
                 <div>
-                    <h4>EXPLORE</h4>
+                    <h4>@(isGerman ? "ENTDECKEN" : "EXPLORE")</h4>
                     <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#creators">Creators</a></li>
-                        <li><a href="#platforms">Platforms</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="mailto:contact@creatorhub.com">Contact</a></li>
+                        <li><a href="#home">@(isGerman ? "Startseite" : "Home")</a></li>
+                        <li><a href="#creators">@(isGerman ? "Creator" : "Creators")</a></li>
+                        <li><a href="#platforms">@(isGerman ? "Plattformen" : "Platforms")</a></li>
+                        <li><a href="#about">@(isGerman ? "Über uns" : "About")</a></li>
+                        <li><a href="mailto:contact@creatorhub.com">@(isGerman ? "Kontakt" : "Contact")</a></li>
                     </ul>
                 </div>
+
                 <div>
-                    <h4>PLATFORMS</h4>
+                    <h4>@(isGerman ? "PLATTFORMEN" : "PLATFORMS")</h4>
                     <ul>
                         <li><a href="#platforms">BIG7</a></li>
                         <li><a href="#platforms">Frivol</a></li>
                         <li><a href="#platforms">MDH</a></li>
-                        @* <li><a href="#platforms">Amateur</a></li> *@
                     </ul>
                 </div>
             </div>
-            <p class="copy">© 2026 CreatorHub. All rights reserved.</p>
+
+            <p class="copy">© 2026 CreatorHub. @(isGerman ? "Alle Rechte vorbehalten." : "All rights reserved.")</p>
         </div>
     </footer>
 
     <script>
-        const $ = selector => document.querySelector(selector);
-        const $$ = selector => [...document.querySelectorAll(selector)];
+        (() => {
+            'use strict';
 
-        let plat = 'ALL';
-        let searchTimer;
-        let activeRequest = 0;
+            const tr = {
+                unknownCreator: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Unbekannter Creator" : "Unknown creator")),
+                creatorHub: "CreatorHub",
+                importedProfile: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Importiertes Profil" : "Imported profile")),
+                profilePicture: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Profilbild" : "profile picture")),
+                viewProfile: @Html.Raw(JsonSerializer.Serialize(isGerman ? "ORIGINALPROFIL ANSEHEN" : "VIEW ORIGINAL PROFILE")),
+                urlUnavailable: @Html.Raw(JsonSerializer.Serialize(isGerman ? "PROFIL-URL NICHT VERFÜGBAR" : "PROFILE URL UNAVAILABLE")),
+                searchUnavailable: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Suche nicht verfügbar" : "Search unavailable")),
+                unknownError: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Ein unbekannter Suchfehler ist aufgetreten." : "An unknown search error occurred.")),
+                searching: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Suche läuft ..." : "Searching...")),
+                connecting: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Verbindung zur CreatorHub-Datenbank ..." : "Connecting to CreatorHub database...")),
+                resultsFor: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Ergebnisse für" : "Results for")),
+                allCreators: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Alle Creator" : "All creators")),
+                creatorsOn: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Creator auf" : "Creators on")),
+                profile: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Profil" : "profile")),
+                profiles: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Profile" : "profiles")),
+                found: @Html.Raw(JsonSerializer.Serialize(isGerman ? "gefunden" : "found")),
+                page: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Seite" : "Page")),
+                serverError: @Html.Raw(JsonSerializer.Serialize(isGerman ? "Der Server konnte die Suche nicht abschließen." : "The server could not complete the search."))
+            };
 
-        const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        }[char]));
+            const $ = selector => document.querySelector(selector);
+            const $$ = selector => [...document.querySelectorAll(selector)];
 
-        // Only allow valid HTTP/HTTPS image and profile URLs.
-        function safeUrl(value) {
-            try {
-                const url = new URL(String(value ?? ''), window.location.origin);
-                return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
-            } catch {
-                return '';
-            }
-        }
-
-        function profileCard(profile) {
-            const username = esc(profile.username || 'Unknown creator');
-            const platform = esc(profile.platform || 'CreatorHub');
-            const profileUrl = safeUrl(profile.url);
-            const imageUrl = safeUrl(
-                profile.profileImageUrl ||
-                profile.ProfileImageUrl ||
-                profile.imageUrl ||
-                profile.profileImage
-            );
-
-            const initials = String(profile.username || '?')
-                .trim()
-                .substring(0, 2)
-                .toUpperCase();
-
-            const imageMarkup = imageUrl
-                ? `<img src="${esc(imageUrl)}"
-                        alt="${username} profile picture"
-                        loading="lazy"
-                        referrerpolicy="no-referrer"
-                        onerror="this.hidden=true; this.parentElement.classList.remove('has-image');" />`
-                : '';
-
-            const page = profile.sourcePage ?? profile.SourcePage ?? '—';
-
-            return `
-                <article class="card">
-                    <div class="ph r ${imageUrl ? 'has-image' : ''}">
-                        <span class="initials">${esc(initials)}</span>
-                        ${imageMarkup}
-                        <span class="plat">${platform}</span>
-                    </div>
-                    <div class="cb">
-                        <h3 class="cond">${username}</h3>
-                        <span class="u">Imported profile</span>
-                        <div class="m">
-                            <span>Page ${esc(page)}</span>
-                            <span>${platform}</span>
-                        </div>
-                        ${profileUrl
-                            ? `<a class="vp" href="${esc(profileUrl)}"
-                                  target="_blank" rel="noopener noreferrer">
-                                  VIEW ORIGINAL PROFILE
-                               </a>`
-                            : `<span class="vp">PROFILE URL UNAVAILABLE</span>`
-                        }
-                    </div>
-                </article>`;
-        }
-
-        async function run(scroll = false) {
-            const requestId = ++activeRequest;
-            const searchTerm = $('#q').value.trim();
-
+            const searchForm = $('#searchForm');
+            const searchInput = $('#q');
             const resultsSection = $('#results');
             const resultGrid = $('#rgrid');
             const emptyMessage = $('#empty');
             const resultMeta = $('#rmeta');
             const resultTitle = $('#rtitle');
 
-            resultsSection.classList.add('show');
-            resultTitle.textContent = 'Searching...';
-            resultMeta.hidden = false;
-            resultMeta.textContent = 'Connecting to CreatorHub database...';
-            resultGrid.innerHTML = '';
-            emptyMessage.hidden = true;
+            if (!searchForm || !searchInput || !resultsSection ||
+                !resultGrid || !emptyMessage || !resultMeta || !resultTitle) {
+                console.error('CreatorHub: Required search or results elements are missing.');
+                return;
+            }
 
-            try {
-                const params = new URLSearchParams({
-                    q: searchTerm,
-                    platform: plat
-                });
+            let selectedPlatform = 'ALL';
+            let searchTimer = null;
+            let activeRequest = 0;
 
-                const response = await fetch(
-                    `/Creators/Search?${params.toString()}`,
-                    {
-                        method: 'GET',
-                        headers: { 'Accept': 'application/json' }
+            const imagePropertyNames = [
+                'profileImageUrl', 'ProfileImageUrl',
+                'profilePhotoUrl', 'ProfilePhotoUrl',
+                'profilePhoto', 'ProfilePhoto',
+                'avatarUrl', 'AvatarUrl', 'avatar', 'Avatar',
+                'imageUrl', 'ImageUrl', 'image', 'Image',
+                'photoUrl', 'PhotoUrl',
+                'thumbnailUrl', 'ThumbnailUrl',
+                'pictureUrl', 'PictureUrl',
+                'coverImageUrl', 'CoverImageUrl',
+                'coverImage', 'CoverImage'
+            ];
+
+            const usernamePropertyNames = [
+                'username', 'Username', 'nick', 'Nick',
+                'displayName', 'DisplayName', 'name', 'Name'
+            ];
+
+            const profileUrlPropertyNames = [
+                'url', 'Url', 'profileUrl', 'ProfileUrl',
+                'profileURL', 'ProfileURL', 'profileLink', 'ProfileLink'
+            ];
+
+            function escapeHtml(value) {
+                return String(value ?? '').replace(/[&<>"']/g, character => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[character]));
+            }
+
+            function getProperty(object, names) {
+                if (!object || typeof object !== 'object') return null;
+
+                for (const name of names) {
+                    const value = object[name];
+                    if (value !== undefined && value !== null &&
+                        String(value).trim() !== '') {
+                        return value;
                     }
+                }
+
+                const propertyMap = new Map(
+                    Object.keys(object).map(key => [key.toLowerCase(), object[key]])
                 );
 
-                if (!response.ok) {
-                    throw new Error(`Search failed: HTTP ${response.status}`);
+                for (const name of names) {
+                    const value = propertyMap.get(name.toLowerCase());
+                    if (value !== undefined && value !== null &&
+                        String(value).trim() !== '') {
+                        return value;
+                    }
                 }
 
-                const data = await response.json();
-
-                // Ignore old responses if the user starts another search.
-                if (requestId !== activeRequest) return;
-
-                if (!data.success) {
-                    throw new Error('The server could not complete the search.');
-                }
-
-                const results = Array.isArray(data.results) ? data.results : [];
-
-                resultTitle.textContent = searchTerm
-                    ? `Results for "${searchTerm}"`
-                    : `Creators on ${plat}`;
-
-                resultMeta.textContent =
-                    `${data.count ?? results.length} profile${(data.count ?? results.length) === 1 ? '' : 's'} found`;
-
-                resultGrid.innerHTML = results.map(profileCard).join('');
-                emptyMessage.hidden = results.length > 0;
-
-                if (scroll) {
-                    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            } catch (error) {
-                if (requestId !== activeRequest) return;
-
-                console.error('CreatorHub search error:', error);
-                resultTitle.textContent = 'Search unavailable';
-                resultMeta.textContent =
-                    'Could not load profiles. Please check your connection and try again.';
-                resultGrid.innerHTML = '';
-                emptyMessage.hidden = true;
+                return null;
             }
-        }
 
-        function setPlat(platform) {
-            plat = platform;
+            function safeUrl(value) {
+                if (typeof value !== 'string' && typeof value !== 'number') return '';
+
+                const text = String(value).trim();
+                if (!text) return '';
+
+                try {
+                    const url = new URL(text, window.location.origin);
+                    if (!['http:', 'https:'].includes(url.protocol)) return '';
+                    return url.href;
+                } catch {
+                    return '';
+                }
+            }
+
+            function getUsername(profile) {
+                return String(
+                    getProperty(profile, usernamePropertyNames) || tr.unknownCreator
+                ).trim();
+            }
+
+            function getProfileImage(profile) {
+                const directImage = getProperty(profile, imagePropertyNames);
+
+                if (directImage) {
+                    const url = safeUrl(directImage);
+                    if (url) return url;
+                }
+
+                const nestedObjects = [
+                    profile?.creator, profile?.Creator,
+                    profile?.profile, profile?.Profile,
+                    profile?.platformProfile, profile?.PlatformProfile,
+                    profile?.platform, profile?.Platform,
+                    profile?.data, profile?.Data
+                ];
+
+                for (const nestedObject of nestedObjects) {
+                    const nestedImage = getProperty(nestedObject, imagePropertyNames);
+                    if (nestedImage) {
+                        const url = safeUrl(nestedImage);
+                        if (url) return url;
+                    }
+                }
+
+                return '';
+            }
+
+            function getProfileUrl(profile) {
+                return safeUrl(getProperty(profile, profileUrlPropertyNames));
+            }
+
+            function getPlatform(profile) {
+                const value = getProperty(profile, [
+                    'platformName', 'PlatformName', 'platform', 'Platform',
+                    'source', 'Source'
+                ]);
+
+                if (!value || typeof value === 'object') return tr.creatorHub;
+                return String(value).trim() || tr.creatorHub;
+            }
+
+            function getSourcePage(profile) {
+                return getProperty(profile, [
+                    'sourcePage', 'SourcePage', 'page', 'Page'
+                ]) ?? '—';
+            }
+
+            function getInitials(username) {
+                return escapeHtml(
+                    String(username || '?').trim().substring(0, 2).toUpperCase() || '?'
+                );
+            }
+
+            function profileCard(profile) {
+                const usernameText = getUsername(profile);
+                const username = escapeHtml(usernameText);
+                const platform = escapeHtml(getPlatform(profile));
+                const profileUrl = getProfileUrl(profile);
+                const imageUrl = getProfileImage(profile);
+                const initials = getInitials(usernameText);
+                const sourcePage = escapeHtml(getSourcePage(profile));
+
+                const imageMarkup = imageUrl
+                    ? `
+                        <img
+                            src="${escapeHtml(imageUrl)}"
+                            alt="${username} ${tr.profilePicture}"
+                            loading="lazy"
+                            decoding="async"
+                            onerror="
+                                console.error('CreatorHub image failed to load:', this.src);
+                                this.parentElement.classList.remove('has-image');
+                                this.remove();
+                            "
+                        />
+                    `
+                    : '';
+
+                const profileAction = profileUrl
+                    ? `
+                        <a class="vp"
+                           href="${escapeHtml(profileUrl)}"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            ${tr.viewProfile}
+                        </a>
+                    `
+                    : `<span class="vp">${tr.urlUnavailable}</span>`;
+
+                return `
+                    <article class="card">
+                        <div class="ph r ${imageUrl ? 'has-image' : ''}">
+                            <span class="initials">${initials}</span>
+                            ${imageMarkup}
+                            <span class="plat">${platform}</span>
+                        </div>
+                        <div class="cb">
+                            <h3 class="cond">${username}</h3>
+                            <span class="u">${tr.importedProfile}</span>
+                            <div class="m">
+                                <span>${tr.page} ${sourcePage}</span>
+                                <span>${platform}</span>
+                            </div>
+                            ${profileAction}
+                        </div>
+                    </article>
+                `;
+            }
+
+            function getResults(data) {
+                if (Array.isArray(data)) return data;
+
+                const possibleResults = [
+                    data?.results, data?.Results,
+                    data?.items, data?.Items,
+                    data?.profiles, data?.Profiles
+                ];
+
+                return possibleResults.find(Array.isArray) || [];
+            }
+
+            function getResultCount(data, results) {
+                const count = getProperty(data, [
+                    'count', 'Count', 'total', 'Total',
+                    'totalCount', 'TotalCount'
+                ]);
+
+                const number = Number(count);
+                return Number.isFinite(number) && number >= 0
+                    ? number
+                    : results.length;
+            }
+
+            function setPlatform(platform) {
+                selectedPlatform = String(platform || 'ALL').toUpperCase();
+
+                $$('.f').forEach(button => {
+                    button.setAttribute(
+                        'aria-pressed',
+                        String(String(button.dataset.p || '').toUpperCase() === selectedPlatform)
+                    );
+                });
+            }
+
+            function showEmptyMessage(show) {
+                emptyMessage.hidden = !show;
+            }
+
+            function showSearchError(error) {
+                console.error('CreatorHub search error:', error);
+                resultTitle.textContent = tr.searchUnavailable;
+                resultMeta.textContent = error?.message || tr.unknownError;
+                resultGrid.innerHTML = '';
+                showEmptyMessage(false);
+            }
+
+            async function runSearch(scroll = false) {
+                const requestId = ++activeRequest;
+                const searchTerm = searchInput.value.trim();
+
+                resultsSection.classList.add('show');
+                resultTitle.textContent = tr.searching;
+                resultMeta.hidden = false;
+                resultMeta.textContent = tr.connecting;
+                resultGrid.innerHTML = '';
+                showEmptyMessage(false);
+
+                try {
+                    const params = new URLSearchParams({
+                        q: searchTerm,
+                        platform: selectedPlatform
+                    });
+
+                    const searchUrl =
+                        '@Url.Action("Search", "Creators")' + '?' + params.toString();
+
+                    const response = await fetch(searchUrl, {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'same-origin'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Search failed with HTTP ${response.status}.`);
+                    }
+
+                    const data = await response.json();
+
+                    if (requestId !== activeRequest) return;
+
+                    if (data && typeof data === 'object' &&
+                        (data.success === false || data.Success === false)) {
+                        throw new Error(
+                            data.message || data.Message || tr.serverError
+                        );
+                    }
+
+                    const results = getResults(data);
+                    const count = getResultCount(data, results);
+
+                    resultTitle.textContent = searchTerm
+                        ? `${tr.resultsFor} "${searchTerm}"`
+                        : selectedPlatform === 'ALL'
+                            ? tr.allCreators
+                            : `${tr.creatorsOn} ${selectedPlatform}`;
+
+                    resultMeta.textContent =
+                        `${count} ${count === 1 ? tr.profile : tr.profiles} ${tr.found}`;
+
+                    resultGrid.innerHTML = results.map(profileCard).join('');
+                    showEmptyMessage(results.length === 0);
+
+                    if (scroll) {
+                        resultsSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                } catch (error) {
+                    if (requestId !== activeRequest) return;
+                    showSearchError(error);
+                }
+            }
+
+            searchForm.addEventListener('submit', event => {
+                event.preventDefault();
+                clearTimeout(searchTimer);
+                runSearch(true);
+            });
+
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimer);
+                const value = searchInput.value.trim();
+
+                searchTimer = setTimeout(() => {
+                    if (value.length >= 2 || value.length === 0) {
+                        runSearch(false);
+                    }
+                }, 350);
+            });
 
             $$('.f').forEach(button => {
-                button.setAttribute(
-                    'aria-pressed',
-                    String(button.dataset.p === platform)
+                button.addEventListener('click', () => {
+                    setPlatform(button.dataset.p);
+                    runSearch(true);
+                });
+            });
+
+            $$('.pb').forEach(button => {
+                button.addEventListener('click', () => {
+                    const platform = button.dataset.go;
+                    if (!platform) return;
+
+                    setPlatform(platform);
+                    searchInput.value = '';
+                    runSearch(true);
+                });
+            });
+
+            const ctaButton = $('#ctaBtn');
+
+            if (ctaButton) {
+                ctaButton.addEventListener('click', event => {
+                    event.preventDefault();
+
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    searchInput.focus({ preventScroll: true });
+                });
+            }
+
+            setPlatform('ALL');
+        })();
+    </script>
+
+    <script>
+        (() => {
+            const toggle = document.getElementById("homeThemeToggle");
+            const icon = document.getElementById("homeThemeIcon");
+            const label = document.getElementById("homeThemeLabel");
+            const root = document.documentElement;
+            const isGerman = root.lang.toLowerCase().startsWith("de");
+
+            if (!toggle || !icon || !label) return;
+
+            function applyTheme(theme) {
+                const isDark = theme === "dark";
+
+                root.setAttribute("data-theme", theme);
+                icon.textContent = isDark ? "☀️" : "🌙";
+
+                label.textContent = isDark
+                    ? (isGerman ? "Heller Modus" : "Light Mode")
+                    : (isGerman ? "Dunkler Modus" : "Dark Mode");
+
+                toggle.setAttribute(
+                    "aria-label",
+                    isDark
+                        ? (isGerman ? "Zum hellen Modus wechseln" : "Switch to light mode")
+                        : (isGerman ? "Zum dunklen Modus wechseln" : "Switch to dark mode")
                 );
-            });
-        }
 
-        $('#searchForm').addEventListener('submit', event => {
-            event.preventDefault();
-            run(true);
-        });
+                toggle.setAttribute("aria-pressed", String(!isDark));
 
-        $('#q').addEventListener('input', () => {
-            clearTimeout(searchTimer);
-
-            searchTimer = setTimeout(() => {
-                if ($('#q').value.trim().length >= 2) {
-                    run(false);
+                try {
+                    localStorage.setItem("creatorhub-theme", theme);
+                } catch {
+                    // The theme still works for this page.
                 }
-            }, 350);
-        });
+            }
 
-        $$('.f').forEach(button => {
-            button.addEventListener('click', () => {
-                setPlat(button.dataset.p);
-                run(true);
+            toggle.addEventListener("click", () => {
+                const current = root.getAttribute("data-theme") || "dark";
+                applyTheme(current === "dark" ? "light" : "dark");
             });
-        });
 
-        $$('.pb').forEach(button => {
-            button.addEventListener('click', () => {
-                setPlat(button.dataset.go);
-                $('#q').value = '';
-                run(true);
-            });
-        });
-
-        $('#ctaBtn').addEventListener('click', event => {
-            event.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            $('#q').focus({ preventScroll: true });
-        });
+            applyTheme(root.getAttribute("data-theme") || "dark");
+        })();
     </script>
 </body>
 </html>
-```

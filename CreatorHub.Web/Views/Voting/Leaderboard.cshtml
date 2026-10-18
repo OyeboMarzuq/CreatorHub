@@ -1,0 +1,133 @@
+﻿@model IReadOnlyList<CreatorHub.Application.DTOs.Voting.LeaderboardEntryDto>
+
+@{
+    ViewData["Title"] = "Creator Leaderboard";
+}
+
+<style>
+    .leaderboard-page {
+        padding: 40px 16px;
+        min-height: 70vh;
+    }
+
+    .leaderboard-heading {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+        .leaderboard-heading h1 {
+            font-weight: 800;
+        }
+
+        .leaderboard-heading span {
+            color: #dc2626;
+        }
+
+    .leaderboard-table-wrap {
+        overflow-x: auto;
+        border: 1px solid #e5e5e5;
+        border-radius: 14px;
+    }
+
+    .leaderboard-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 15px 18px;
+            vertical-align: middle;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .leaderboard-table th {
+            background: #171717;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .leaderboard-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+    .leaderboard-avatar {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 50%;
+        background: #e5e5e5;
+    }
+
+    .rank-number {
+        font-weight: 800;
+        color: #dc2626;
+    }
+</style>
+
+<section class="leaderboard-page">
+    <header class="leaderboard-heading">
+        <h1>Creator <span>Leaderboard</span></h1>
+        <p>See which creators are leading the community vote.</p>
+    </header>
+
+    @if (Model.Count == 0 || Model.All(x => x.VoteCount == 0))
+    {
+        <div class="alert alert-info text-center">
+            No votes have been recorded yet. Be among the first to vote!
+        </div>
+    }
+    else
+    {
+        <div class="leaderboard-table-wrap">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Creator</th>
+                        <th>Total votes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var creator in Model)
+                    {
+                        <tr>
+                            <td class="rank-number">#@creator.Rank</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    @if (!string.IsNullOrWhiteSpace(creator.ProfileImageUrl))
+                                    {
+                                        <img class="leaderboard-avatar"
+                                             src="@creator.ProfileImageUrl"
+                                             alt="@creator.DisplayName"
+                                             loading="lazy" />
+                                    }
+                                    else
+                                    {
+                                        <div class="leaderboard-avatar d-flex align-items-center justify-content-center fw-bold">
+                                            @(string.IsNullOrEmpty(creator.DisplayName)
+                                                                            ? "?"
+                                                                            : creator.DisplayName[..1])
+                            </div>
+                                                        }
+
+                                    <span class="fw-semibold">@creator.DisplayName</span>
+                                </div>
+                            </td>
+                            <td><strong>@creator.VoteCount</strong></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="text-center mt-4">
+        <a class="btn btn-danger"
+           asp-controller="Voting"
+           asp-action="Index">
+            Vote now
+        </a>
+    </div>
+</section>

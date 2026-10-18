@@ -4,6 +4,7 @@ using CreatorHub.Application.Services;
 using CreatorHub.Infrastructure.Email;
 using CreatorHub.Infrastructure.Repositories;
 using CreatorHub.Infrastructure.Security;
+using CreatorHub.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CreatorHub.Infrastructure.DependencyInjection;
@@ -17,6 +18,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICreatorRepository, CreatorRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IVotingService, VotingService>();
+        services.AddScoped<IVoteRepository, VoteRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IPlatformRepository, PlatformRepository>();
         services.AddScoped<IProfileUrlRepository, ProfileUrlRepository>();

@@ -4,17 +4,31 @@
     Layout = null;
 
     var adminName = User.Identity?.Name ?? "Admin";
-    var initial = adminName.Length > 0 ? adminName.Substring(0, 1).ToUpperInvariant() : "A";
+    var initial = adminName.Length > 0
+        ? adminName.Substring(0, 1).ToUpperInvariant()
+        : "A";
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0A0A0A" />
     <meta name="format-detection" content="telephone=no" />
     <title>@ViewData["Title"] | CreatorHub</title>
+
+    <script>
+        (function () {
+            try {
+                const saved = localStorage.getItem("creatorhub-theme");
+                document.documentElement.dataset.theme =
+                    saved === "light" ? "light" : "dark";
+            } catch {
+                document.documentElement.dataset.theme = "dark";
+            }
+        })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,14 +38,30 @@
         :root {
             --red: #E10600;
             --red-dark: #B80500;
-            --black: #0A0A0A;
-            --white: #FFFFFF;
-            --grey: #F2F2F2;
-            --muted: #6B6B6B;
-            --border: #E4E4E4;
             --cond: 'Anton', Impact, sans-serif;
             --serif: 'Instrument Serif', Georgia, serif;
             --sans: 'Manrope', Arial, sans-serif;
+            --page: #101010;
+            --surface: #191919;
+            --surface-alt: #222222;
+            --text: #F5F5F5;
+            --muted: #B8B8B8;
+            --border: #3A3A3A;
+            --nav: #050505;
+            --shadow: #000000;
+            --input: #202020;
+        }
+
+        html[data-theme="light"] {
+            --page: #F2F2F2;
+            --surface: #FFFFFF;
+            --surface-alt: #F6F6F6;
+            --text: #0A0A0A;
+            --muted: #6B6B6B;
+            --border: #E4E4E4;
+            --nav: #0A0A0A;
+            --shadow: #0A0A0A;
+            --input: #FFFFFF;
         }
 
         * {
@@ -40,20 +70,36 @@
             padding: 0;
         }
 
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
+
         body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
             font-family: var(--sans);
-            color: var(--black);
-            background: var(--grey);
+            color: var(--text);
+            background: var(--page);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            transition: background .2s, color .2s;
         }
 
         a {
             color: inherit;
             text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        button, a {
+        button {
+            font: inherit;
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: 0;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -84,8 +130,9 @@
 
         /* Navigation */
         .topbar {
-            background: var(--black);
-            color: var(--white);
+            padding-top: env(safe-area-inset-top);
+            background: var(--nav);
+            color: #FFFFFF;
         }
 
         .topbar-inner {
@@ -93,7 +140,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 32px;
+            gap: 24px;
         }
 
         .logo {
@@ -112,28 +159,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: clamp(18px, 3vw, 36px);
+            gap: clamp(14px, 2vw, 28px);
         }
 
             .nav a {
+                display: inline-flex;
+                align-items: center;
+                min-height: 44px;
                 color: #BDBDBD;
-                font-size: 13px;
+                font-size: 12px;
                 font-weight: 800;
-                padding: 9px 0;
                 border-bottom: 2px solid transparent;
                 transition: color .2s, border-color .2s;
+                white-space: nowrap;
             }
 
                 .nav a:hover, .nav a.active {
-                    color: var(--white);
+                    color: #FFFFFF;
                     border-color: var(--red);
+                }
+
+                .nav a.soon, .action-card.soon {
+                    opacity: .45;
+                    pointer-events: none;
+                    cursor: default;
                 }
 
         .admin {
             display: flex;
             align-items: center;
-            gap: 11px;
-            font-size: 13px;
+            gap: 10px;
+            font-size: 12px;
             font-weight: 800;
             white-space: nowrap;
         }
@@ -143,16 +199,61 @@
             place-items: center;
             width: 38px;
             height: 38px;
+            flex-shrink: 0;
             background: var(--red);
-            color: var(--white);
+            color: #FFFFFF;
             font-family: var(--cond);
             font-size: 20px;
         }
 
-        /* Page heading */
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 44px;
+            padding: 8px 11px;
+            border: 1px solid #444444;
+            background: transparent;
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+            .theme-toggle:hover {
+                background: #292929;
+            }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout {
+            min-height: 44px;
+            padding: 9px 12px;
+            border: 1px solid #3A3A3A;
+            background: transparent;
+            color: #BDBDBD;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+
+            .logout:hover {
+                background: var(--red);
+                border-color: var(--red);
+                color: #FFFFFF;
+            }
+
+        /* Hero */
         .hero {
             background: var(--red);
-            color: var(--white);
+            color: #FFFFFF;
             padding: 56px 0 78px;
         }
 
@@ -178,7 +279,7 @@
 
             .hero h1 .ital {
                 display: block;
-                color: var(--black);
+                color: #0A0A0A;
                 margin-top: 5px;
             }
 
@@ -197,20 +298,21 @@
             gap: 12px;
             min-height: 48px;
             padding: 13px 22px;
-            background: var(--black);
-            border: 2px solid var(--black);
-            color: var(--white);
+            background: #0A0A0A;
+            border: 2px solid #0A0A0A;
+            color: #FFFFFF;
             font-size: 11px;
             font-weight: 800;
             letter-spacing: .09em;
             text-transform: uppercase;
             transition: background .2s, color .2s;
             white-space: nowrap;
+            cursor: pointer;
         }
 
             .button:hover {
-                background: var(--white);
-                color: var(--black);
+                background: #FFFFFF;
+                color: #0A0A0A;
             }
 
         /* Statistics */
@@ -221,31 +323,29 @@
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            border: 2px solid var(--black);
-            box-shadow: 7px 7px 0 var(--black);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            border: 2px solid var(--shadow);
+            box-shadow: 7px 7px 0 var(--shadow);
         }
 
         .stat {
             min-width: 0;
-            min-height: 190px;
-            padding: 24px;
-            background: var(--white);
+            min-height: 170px;
+            padding: 23px;
+            background: var(--surface);
+            color: var(--text);
             border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
-            .stat:last-child {
-                border-right: 0;
-            }
-
             .stat.dark {
-                background: var(--black);
-                color: var(--white);
+                background: #050505;
+                color: #FFFFFF;
             }
 
             .stat.red {
                 background: var(--red);
-                color: var(--white);
+                color: #FFFFFF;
             }
 
         .stat-label {
@@ -260,15 +360,15 @@
             display: block;
             margin: 16px 0 9px;
             font-family: var(--cond);
-            font-size: clamp(43px, 5vw, 72px);
+            font-size: clamp(38px, 4.4vw, 65px);
             line-height: 1;
             overflow-wrap: anywhere;
         }
 
         .stat-description {
-            font-size: 12px;
-            font-weight: 600;
             color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
         }
 
         .stat.dark .stat-description {
@@ -303,7 +403,7 @@
         .section-description {
             margin-top: 8px;
             color: var(--muted);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
         }
 
@@ -316,8 +416,9 @@
 
         .panel {
             min-width: 0;
-            background: var(--white);
-            border: 2px solid var(--black);
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--shadow);
         }
 
         .panel-header {
@@ -341,7 +442,7 @@
             color: var(--red);
             font-size: 11px;
             font-weight: 800;
-            letter-spacing: .08em;
+            letter-spacing: .06em;
             text-transform: uppercase;
             white-space: nowrap;
         }
@@ -358,7 +459,7 @@
             align-items: center;
             justify-content: center;
             padding: 32px 20px;
-            border: 2px dashed #D7D7D7;
+            border: 2px dashed var(--border);
             text-align: center;
         }
 
@@ -385,11 +486,12 @@
             font-weight: 600;
         }
 
-        /* Importer status */
+        /* Import status */
         .source-card {
             padding: 19px;
             border: 1px solid var(--border);
             margin-bottom: 14px;
+            background: var(--surface);
         }
 
             .source-card:last-child {
@@ -445,12 +547,13 @@
             color: var(--muted);
             font-size: 12px;
             font-weight: 600;
+            overflow-wrap: anywhere;
         }
 
         .progress-track {
             height: 7px;
             margin-top: 16px;
-            background: #EDEDED;
+            background: var(--border);
             overflow: hidden;
         }
 
@@ -469,330 +572,7 @@
             font-weight: 800;
         }
 
-        /* Quick actions */
-        .quick-actions {
-            margin-top: 58px;
-        }
-
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 18px;
-        }
-
-        .action-card {
-            display: flex;
-            min-height: 200px;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 25px;
-            background: var(--black);
-            color: var(--white);
-            transition: background .2s, transform .2s;
-        }
-
-            .action-card:nth-child(2) {
-                background: var(--white);
-                color: var(--black);
-                border: 2px solid var(--black);
-            }
-
-            .action-card:hover {
-                background: var(--red);
-                color: var(--white);
-                transform: translateY(-3px);
-            }
-
-            .action-card h3 {
-                font-size: clamp(32px, 3vw, 43px);
-            }
-
-            .action-card p {
-                max-width: 260px;
-                margin-top: 12px;
-                font-size: 12px;
-                font-weight: 600;
-                opacity: .8;
-            }
-
-        .action-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 24px;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .09em;
-        }
-
-        .footer {
-            padding: 23px 0;
-            background: var(--black);
-            color: #BDBDBD;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .footer-inner {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        @@media (max-width: 1000px) {
-            .topbar-inner {
-                gap: 20px;
-            }
-
-            .nav {
-                gap: 16px;
-            }
-
-                .nav a {
-                    font-size: 11px;
-                }
-
-            .stats {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .stat:nth-child(2) {
-                border-right: 0;
-            }
-
-            .stat:nth-child(-n+2) {
-                border-bottom: 1px solid var(--border);
-            }
-
-            .overview-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @@media (max-width: 680px) {
-            .container {
-                width: calc(100% - 32px);
-            }
-
-            .topbar-inner {
-                min-height: 68px;
-                flex-wrap: wrap;
-                padding: 14px 0;
-            }
-
-            .nav {
-                order: 3;
-                width: 100%;
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 4px;
-            }
-
-                .nav a {
-                    flex-shrink: 0;
-                }
-
-            .admin span {
-                display: none;
-            }
-
-            .hero {
-                padding: 42px 0 65px;
-            }
-
-            .hero-inner {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .hero h1 {
-                font-size: clamp(49px, 12vw, 76px);
-            }
-
-            .hero-description {
-                font-size: 13px;
-            }
-
-            .stats-wrap {
-                margin-top: -30px;
-            }
-
-            .stats {
-                box-shadow: 4px 4px 0 var(--black);
-            }
-
-            .stat {
-                min-height: 150px;
-                padding: 17px;
-            }
-
-            .stat-number {
-                font-size: clamp(38px, 10vw, 58px);
-                margin: 12px 0 7px;
-            }
-
-            .stat-label {
-                font-size: 9px;
-            }
-
-            main {
-                padding-top: 43px;
-            }
-
-            .panel-header, .panel-body {
-                padding: 18px;
-            }
-
-                .panel-header h3 {
-                    font-size: 23px;
-                }
-
-            .section-heading h2 {
-                font-size: 38px;
-            }
-
-            .action-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .action-card {
-                min-height: 165px;
-            }
-        }
-
-        @@media (max-width: 380px) {
-            .container {
-                width: calc(100% - 24px);
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .stat {
-                min-height: 125px;
-                border-right: 0;
-                border-bottom: 1px solid var(--border);
-            }
-
-                .stat:last-child {
-                    border-bottom: 0;
-                }
-
-            .stat-number {
-                font-size: 52px;
-            }
-
-            .section-heading {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-        }
-
-        @@media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                transition: none !important;
-                scroll-behavior: auto !important;
-            }
-        }
-
-        /* Admin additions */
-        .nav a.soon, .action-card.soon {
-            opacity: .45;
-            pointer-events: none;
-            cursor: default;
-        }
-
-        .logout-form {
-            margin: 0;
-        }
-
-        .logout {
-            padding: 9px 14px;
-            border: 1px solid #3a3a3a;
-            color: #BDBDBD;
-            font: inherit;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background .2s, color .2s, border-color .2s;
-        }
-
-            .logout:hover {
-                background: var(--red);
-                border-color: var(--red);
-                color: var(--white);
-            }
-
-        .members {
-            margin-top: 24px;
-        }
-
-        .table-wrap {
-            overflow-x: auto;
-        }
-
-        table.members-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .members-table th {
-            text-align: left;
-            padding: 14px 24px;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: var(--muted);
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-        }
-
-        .members-table td {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border);
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .members-table tr:last-child td {
-            border-bottom: 0;
-        }
-
-        .members-table td.mute {
-            color: var(--muted);
-            font-weight: 500;
-        }
-
-        .members-table .who {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .members-table .dot {
-            display: grid;
-            place-items: center;
-            width: 34px;
-            height: 34px;
-            background: var(--black);
-            color: var(--white);
-            font-family: var(--cond);
-            font-size: 16px;
-        }
-
-        .source-list .source-card + .source-card {
-            margin-top: 16px;
-        }
-
-        /* ------------------------------------------------------------------
-                   Import controls
-                ------------------------------------------------------------------ */
+        /* Import controls */
         .notice {
             margin-bottom: 18px;
             padding: 14px 16px;
@@ -828,17 +608,30 @@
             margin-top: 14px;
         }
 
+        .file-input {
+            display: block;
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 12px;
+            border: 2px dashed var(--border);
+            background: var(--input);
+            color: var(--text);
+            font: inherit;
+            font-size: 16px;
+            border-radius: 0;
+        }
+
         .button.red {
             width: 100%;
             background: var(--red);
             border-color: var(--red);
-            cursor: pointer;
+            color: #FFFFFF;
         }
 
             .button.red:hover {
-                background: var(--black);
-                border-color: var(--black);
-                color: var(--white);
+                background: #050505;
+                border-color: #050505;
+                color: #FFFFFF;
             }
 
         .button[disabled] {
@@ -847,66 +640,345 @@
             pointer-events: none;
         }
 
-        /* ------------------------------------------------------------------
-                   Desktop / iOS Safari / Android compatibility
-                ------------------------------------------------------------------ */
-        html {
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
-        }
-
-        body {
-            min-height: 100vh;
-            min-height: 100dvh;
-            /* keeps content clear of the notch / rounded corners on iPhones */
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
-        }
-
-        .topbar {
-            padding-top: env(safe-area-inset-top);
-        }
-
-        .footer {
-            padding-bottom: calc(23px + env(safe-area-inset-bottom));
-        }
-
-        /* iOS gives buttons rounded corners and its own look by default */
-        button {
-            font: inherit;
-            -webkit-appearance: none;
-            appearance: none;
-            border-radius: 0;
-        }
-
-        /* comfortable 44px touch targets */
-        .nav a {
-            display: inline-flex;
-            align-items: center;
-            min-height: 44px;
-            padding: 0;
-        }
-
-        .logout {
-            min-height: 44px;
-        }
-
-        .nav {
-            -webkit-overflow-scrolling: touch;
+        /* Tables */
+        .members {
+            margin-top: 24px;
         }
 
         .table-wrap {
+            overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        @@media (max-width: 1000px) {
-            .nav a {
+        table.members-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .members-table th {
+            text-align: left;
+            padding: 14px 24px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .members-table td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .members-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .members-table td.mute {
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .members-table .who {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 150px;
+        }
+
+        .members-table .dot {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            background: var(--nav);
+            color: #FFFFFF;
+            font-family: var(--cond);
+            font-size: 16px;
+        }
+
+        .creator-photo {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            object-fit: cover;
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+        }
+
+        .rank {
+            font-family: var(--cond);
+            font-size: 20px;
+            white-space: nowrap;
+        }
+
+        .vote-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            padding: 5px 10px;
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            font-weight: 800;
+        }
+
+        .source-list .source-card + .source-card {
+            margin-top: 16px;
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            margin-top: 58px;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .action-card {
+            display: flex;
+            min-height: 200px;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 25px;
+            background: #050505;
+            color: #FFFFFF;
+            transition: background .2s, transform .2s;
+        }
+
+            .action-card:nth-child(2) {
+                background: var(--surface);
+                color: var(--text);
+                border: 2px solid var(--shadow);
+            }
+
+            .action-card:hover {
+                background: var(--red);
+                color: #FFFFFF;
+                transform: translateY(-3px);
+            }
+
+            .action-card h3 {
+                font-size: clamp(32px, 3vw, 43px);
+            }
+
+            .action-card p {
+                max-width: 260px;
+                margin-top: 12px;
                 font-size: 12px;
+                font-weight: 600;
+                opacity: .8;
+            }
+
+        .action-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .09em;
+        }
+
+        .footer {
+            padding: 23px 0 calc(23px + env(safe-area-inset-bottom));
+            background: var(--nav);
+            color: #BDBDBD;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Light-mode refinements */
+        html[data-theme="light"] .panel,
+        html[data-theme="light"] .source-card,
+        html[data-theme="light"] .action-card:nth-child(2) {
+            background: #FFFFFF;
+            color: #0A0A0A;
+        }
+
+        html[data-theme="light"] .stat.dark {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        html[data-theme="light"] .stat.red {
+            background: var(--red);
+            color: #FFFFFF;
+        }
+
+        html[data-theme="light"] .action-card:not(:nth-child(2)) {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        html[data-theme="light"] .action-card:hover {
+            background: var(--red);
+            color: #FFFFFF;
+        }
+
+        /* Tablet */
+        @@media (max-width: 1000px) {
+            .topbar-inner {
+                gap: 16px;
+            }
+
+            .nav {
+                gap: 12px;
+            }
+
+                .nav a {
+                    font-size: 11px;
+                }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat:nth-child(2n) {
+                border-right: 0;
             }
         }
 
-        /* Members table becomes a list of cards on phones */
+        /* Mobile */
         @@media (max-width: 680px) {
+            .container {
+                width: calc(100% - 32px);
+            }
+
+            .topbar-inner {
+                min-height: 68px;
+                flex-wrap: wrap;
+                padding: 12px 0;
+            }
+
+            .logo {
+                font-size: 25px;
+            }
+
+            .nav {
+                order: 3;
+                width: 100%;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 4px;
+            }
+
+                .nav a {
+                    flex-shrink: 0;
+                    font-size: 12px;
+                }
+
+            .admin {
+                gap: 7px;
+            }
+
+                .admin > span {
+                    display: none;
+                }
+
+            .admin-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            .theme-toggle {
+                padding: 7px;
+                font-size: 10px;
+            }
+
+            .logout {
+                padding: 7px 9px;
+                font-size: 10px;
+            }
+
+            .hero {
+                padding: 42px 0 65px;
+            }
+
+            .hero-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .hero h1 {
+                font-size: clamp(49px, 12vw, 76px);
+            }
+
+            .hero-description {
+                font-size: 13px;
+            }
+
+            .stats-wrap {
+                margin-top: -30px;
+            }
+
+            .stats {
+                box-shadow: 4px 4px 0 var(--shadow);
+            }
+
+            .stat {
+                min-height: 140px;
+                padding: 17px;
+            }
+
+            .stat-number {
+                font-size: clamp(36px, 9vw, 52px);
+                margin: 12px 0 7px;
+            }
+
+            .stat-label {
+                font-size: 9px;
+            }
+
+            main {
+                padding-top: 43px;
+            }
+
+            .panel-header,
+            .panel-body {
+                padding: 18px;
+            }
+
+                .panel-header h3 {
+                    font-size: 23px;
+                }
+
+            .panel-header {
+                align-items: flex-start;
+            }
+
+            .section-heading h2 {
+                font-size: 38px;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-card {
+                min-height: 165px;
+            }
+
             .members-table thead {
                 display: none;
             }
@@ -920,24 +992,18 @@
             }
 
                 .members-table tr {
-                    padding: 14px 18px;
+                    padding: 12px 18px;
                     border-bottom: 1px solid var(--border);
                 }
-
-                    .members-table tr:last-child {
-                        border-bottom: 0;
-                    }
 
                 .members-table td {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     gap: 16px;
-                    padding: 6px 0;
+                    padding: 7px 0;
                     border-bottom: 0;
-                    white-space: normal;
                     text-align: right;
-                    overflow-wrap: anywhere;
                 }
 
                     .members-table td::before {
@@ -946,24 +1012,59 @@
                         color: var(--muted);
                         font-size: 10px;
                         font-weight: 800;
-                        letter-spacing: .1em;
+                        letter-spacing: .08em;
                         text-transform: uppercase;
                         text-align: left;
                     }
 
                 .members-table .who {
-                    text-align: left;
+                    justify-content: flex-end;
+                    text-align: right;
                 }
 
-            .nav a {
-                font-size: 12px;
+                    .members-table .who .creator-name {
+                        overflow-wrap: anywhere;
+                    }
+        }
+
+        @@media (max-width: 380px) {
+            .container {
+                width: calc(100% - 24px);
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat {
+                min-height: 120px;
+                border-right: 0;
+            }
+
+            .stat-number {
+                font-size: 50px;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .theme-toggle span:last-child {
+                display: none;
             }
         }
 
-        /* no sticky hover effects on touch screens */
         @@media (hover: none) {
             .action-card:hover {
                 transform: none;
+            }
+        }
+
+        @@media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+                scroll-behavior: auto !important;
             }
         }
     </style>
@@ -972,7 +1073,9 @@
 <body>
     <nav class="topbar">
         <div class="container topbar-inner">
-            <a asp-controller="Home" asp-action="Dashboard" class="logo">Creator<span>Hub</span></a>
+            <a asp-controller="Home" asp-action="Dashboard" class="logo">
+                Creator<span>Hub</span>
+            </a>
 
             <div class="nav" aria-label="Admin navigation">
                 <a asp-controller="Home" asp-action="Dashboard" class="active">Dashboard</a>
@@ -983,8 +1086,20 @@
 
             <div class="admin">
                 <span>@adminName</span>
-                <div class="admin-avatar">@initial</div>
-                <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                <div class="admin-avatar" aria-label="Administrator">@initial</div>
+
+                <button type="button"
+                        class="theme-toggle"
+                        id="themeToggle"
+                        aria-label="Switch theme">
+                    <span id="themeIcon" aria-hidden="true">☀️</span>
+                    <span id="themeLabel">Light mode</span>
+                </button>
+
+                <form asp-controller="Account"
+                      asp-action="Logout"
+                      method="post"
+                      class="logout-form">
                     <button type="submit" class="logout">Log out</button>
                 </form>
             </div>
@@ -998,7 +1113,8 @@
                 <h1 class="cond">Creator <span class="ital">Hub dashboard</span></h1>
                 <p class="hero-description">
                     One place to manage creators, monitor profile imports,
-                    and keep your members and connected platforms organised.
+                    review voting performance, and keep your members and
+                    connected platforms organised.
                 </p>
             </div>
 
@@ -1025,27 +1141,50 @@
             <article class="stat">
                 <span class="stat-label">Members</span>
                 <strong class="stat-number">@Model.TotalMembers.ToString("N0")</strong>
-                <p class="stat-description">Registered accounts</p>
+                <p class="stat-description">Registered member accounts</p>
             </article>
 
             <article class="stat">
                 <span class="stat-label">Platforms</span>
-                <strong class="stat-number">@Model.TotalPlatforms</strong>
+                <strong class="stat-number">@Model.TotalPlatforms.ToString("N0")</strong>
                 <p class="stat-description">Configured sources</p>
+            </article>
+
+            <article class="stat dark">
+                <span class="stat-label">Total votes</span>
+                <strong class="stat-number">@Model.TotalVotes.ToString("N0")</strong>
+                <p class="stat-description">Recorded creator selections</p>
+            </article>
+
+            <article class="stat">
+                <span class="stat-label">Matchups</span>
+                <strong class="stat-number">@Model.TotalMatchups.ToString("N0")</strong>
+                <p class="stat-description">Distinct creator pairs voted on</p>
             </article>
         </section>
     </div>
 
     <main>
         <div class="container">
+
+            @if (TempData["ImportMessage"] is string importMessage)
+            {
+                <div class="notice" role="status">@importMessage</div>
+            }
+
+            <!-- Creator overview and import centre -->
             <section class="overview-grid">
                 <div class="panel">
                     <div class="panel-header">
                         <div>
                             <h3 class="cond">Creators <span class="ital">overview</span></h3>
-                            <p class="section-description">Creators processed and saved into CreatorHub.</p>
+                            <p class="section-description">
+                                Creator records processed and saved into CreatorHub.
+                            </p>
                         </div>
-                        <a asp-controller="Creators" asp-action="Index" class="text-link">View all ↗</a>
+                        <a asp-controller="Creators"
+                           asp-action="Index"
+                           class="text-link">View all ↗</a>
                     </div>
 
                     <div class="panel-body">
@@ -1057,10 +1196,28 @@
                                     <span class="status">Available</span>
                                 </div>
                                 <p class="source-description">
-                                    There are @Model.TotalCreators.ToString("N0") creator records in the system,
-                                    @Model.ActiveCreators.ToString("N0") of them active.
-                                    Open the creators section to browse them.
+                                    There are @Model.TotalCreators.ToString("N0") creator records,
+                                    of which @Model.ActiveCreators.ToString("N0") are active.
                                 </p>
+                            </div>
+
+                            <div class="source-card">
+                                <div class="source-top">
+                                    <strong>Profile processing</strong>
+                                    <span class="status pending">
+                                        @((Model.TotalProfileUrls - Model.ProcessedProfileUrls).ToString("N0")) pending
+                                    </span>
+                                </div>
+                                <p class="source-description">
+                                    @Model.ProcessedProfileUrls.ToString("N0") of
+                                    @Model.TotalProfileUrls.ToString("N0") collected profile URLs processed.
+                                </p>
+
+                                <div class="progress-track">
+                                    <div class="progress-fill"
+                                         style="width:@(Model.TotalProfileUrls > 0 ? Math.Clamp((int)Math.Round(Model.ProcessedProfileUrls * 100.0 / Model.TotalProfileUrls), 0, 100) : 0)%">
+                                    </div>
+                                </div>
                             </div>
                         }
                         else
@@ -1069,7 +1226,7 @@
                                 <div class="empty-icon" aria-hidden="true">＋</div>
                                 <h4 class="cond">No creators yet</h4>
                                 <p>
-                                    Profile URLs have been collected.
+                                    Profile URLs may have been collected.
                                     Creator records will appear here after profile processing runs.
                                 </p>
                             </div>
@@ -1086,21 +1243,21 @@
                     </div>
 
                     <div class="panel-body source-list">
-                        @if (TempData["ImportMessage"] is string importMessage)
-                        {
-                            <div class="notice" role="status">@importMessage</div>
-                        }
-
                         @if (Model.Sources.Count == 0)
                         {
-                            <p class="section-description">No profile URLs have been collected yet.</p>
+                            <p class="section-description">
+                                No profile URLs have been collected yet.
+                            </p>
                         }
 
                         @foreach (var src in Model.Sources)
                         {
                             <div class="source-card">
                                 <div class="source-top">
-                                    <span class="source-name"><span class="ital">@src.Source</span></span>
+                                    <span class="source-name">
+                                        <span class="ital">@src.Source</span>
+                                    </span>
+
                                     @if (src.Percent >= 100)
                                     {
                                         <span class="status">Complete</span>
@@ -1110,12 +1267,16 @@
                                         <span class="status pending">Pending</span>
                                     }
                                 </div>
+
                                 <p class="source-description">
-                                    @src.Processed.ToString("N0") processed · @((src.Total - src.Processed).ToString("N0")) pending
+                                    @src.Processed.ToString("N0") processed ·
+                                    @((src.Total - src.Processed).ToString("N0")) pending
                                 </p>
+
                                 <div class="progress-track">
                                     <div class="progress-fill" style="width:@(src.Percent)%"></div>
                                 </div>
+
                                 <div class="progress-labels">
                                     <span>@src.Total.ToString("N0") URLs collected</span>
                                     <span>@src.Percent%</span>
@@ -1124,7 +1285,7 @@
                         }
 
                         <div class="import-box">
-                            <div class="import-title">Import profiles</div>
+                            <div class="import-title">Import Frivol profiles</div>
                             <p class="import-help">
                                 Fetches the next 5 unprocessed Frivol profiles and saves them as creators.
                             </p>
@@ -1134,6 +1295,7 @@
                                   method="post"
                                   class="import-form"
                                   id="import-form">
+                                @Html.AntiForgeryToken()
                                 <input type="hidden" name="batchSize" value="5" />
 
                                 <button type="submit" class="button red" id="import-button">
@@ -1141,10 +1303,144 @@
                                 </button>
                             </form>
                         </div>
+
+                        <div class="import-box">
+                            <div class="import-title">Attach MDH pictures</div>
+                            <p class="import-help">
+                                Upload <strong>mdh_avatars.csv</strong>. Each matching MDH profile
+                                gets the picture shown on its search card.
+                            </p>
+
+                            <form asp-controller="Home"
+                                  asp-action="ImportMdhImages"
+                                  method="post"
+                                  enctype="multipart/form-data"
+                                  class="import-form"
+                                  id="mdh-form">
+                                @Html.AntiForgeryToken()
+
+                                <input type="file"
+                                       name="file"
+                                       id="mdh-file"
+                                       accept=".csv,text/csv"
+                                       class="file-input"
+                                       required />
+
+                                <button type="submit" class="button red" id="mdh-button">
+                                    Attach pictures <span aria-hidden="true">↑</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </section>
 
+            <!-- Voting leaderboard -->
+            <section class="panel members" id="admin-leaderboard">
+                <div class="panel-header">
+                    <div>
+                        <h3 class="cond">Voting <span class="ital">leaderboard</span></h3>
+                        <p class="section-description">
+                            Top 5 creators ranked by recorded winning votes.
+                        </p>
+                    </div>
+
+                    <a asp-controller="Voting"
+                       asp-action="Leaderboard"
+                       class="text-link">Full leaderboard ↗</a>
+                </div>
+
+                @if (Model.TopCreators.Count == 0)
+                {
+                    <div class="panel-body">
+                        <div class="empty-state">
+                            <div class="empty-icon" aria-hidden="true">↗</div>
+                            <h4 class="cond">No votes yet</h4>
+                            <p>
+                                The rankings will appear here after votes have been recorded.
+                            </p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-wrap">
+                        <table class="members-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Creator</th>
+                                    <th>Winning votes</th>
+                                    <th>Creator directory</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var creator in Model.TopCreators)
+                                {
+                                    <tr>
+                                        <td data-label="Rank">
+                                            <span class="rank">
+                                                @if (creator.Rank == 1)
+                                                {
+                                                    @:🥇 #1
+                                                }
+                                                else if (creator.Rank == 2)
+                                                {
+                                                    @:🥈 #2
+                                                }
+                                                else if (creator.Rank == 3)
+                                                {
+                                                    @:🥉 #3
+                                                }
+                                                else
+                                                {
+                                                    @:#@creator.Rank
+                                                }
+                                            </span>
+                                        </td>
+
+                                        <td data-label="Creator">
+                                            <div class="who">
+                                                @if (!string.IsNullOrWhiteSpace(creator.ProfileImageUrl))
+                                                {
+                                                    <img class="creator-photo"
+                                                         src="@creator.ProfileImageUrl"
+                                                         alt=""
+                                                         loading="lazy" />
+                                                }
+                                                else
+                                                {
+                                                    <span class="dot">
+                                                        @(string.IsNullOrWhiteSpace(creator.DisplayName)
+                                                                                                    ? "?"
+                                                                                                    : creator.DisplayName.Substring(0, 1).ToUpperInvariant())
+                                        </span>
+                                                                                }
+
+                                                <span class="creator-name">@creator.DisplayName</span>
+                                            </div>
+                                        </td>
+
+                                        <td data-label="Winning votes">
+                                            <span class="vote-count">
+                                                @creator.VoteCount.ToString("N0")
+                                            </span>
+                                        </td>
+
+                                        <td data-label="Directory">
+                                            <a asp-controller="Creators"
+                                               asp-action="Index"
+                                               class="text-link">Browse creators ↗</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </section>
+
+            <!-- Recent members -->
             <section class="panel members">
                 <div class="panel-header">
                     <div>
@@ -1179,53 +1475,72 @@
                                     <tr>
                                         <td data-label="Member">
                                             <div class="who">
-                                                <span class="dot">@m.Name.Substring(0, 1).ToUpperInvariant()</span>
-                                                @m.Name
-                                            </div>
-                                        </td>
-                                        <td class="mute" data-label="Email">@m.Email</td>
-                                        <td data-label="Region">@m.Region</td>
-                                        <td data-label="Gender">@m.Gender</td>
-                                        <td class="mute" data-label="Joined">@m.JoinedAt.ToString("dd MMM yyyy")</td>
-                                    </tr>
-                                }
+                                                <span class="dot">
+                                                    @(string.IsNullOrWhiteSpace(m.Name)
+                                                                                                ? "?"
+                                                                                                : m.Name.Substring(0, 1).ToUpperInvariant())
+                                        </span>
+                                        <span class="creator-name">@m.Name</span>
+                                    </div>
+                                </td>
+                                <td class="mute" data-label="Email">@m.Email</td>
+                                <td data-label="Region">@m.Region</td>
+                                <td data-label="Gender">@m.Gender</td>
+                                <td class="mute" data-label="Joined">
+                                    @m.JoinedAt.ToString("dd MMM yyyy")
+                                </td>
+                            </tr>
+                                                        }
                             </tbody>
                         </table>
                     </div>
                 }
             </section>
 
+            <!-- Quick actions -->
             <section class="quick-actions">
                 <div class="section-heading">
                     <div>
                         <h2 class="cond">Quick <span class="ital">actions</span></h2>
-                        <p class="section-description">Jump straight to the section you need.</p>
+                        <p class="section-description">
+                            Jump straight to the section you need.
+                        </p>
                     </div>
                 </div>
 
                 <div class="action-grid">
-                    <a asp-controller="Creators" asp-action="Index" class="action-card">
+                    <a asp-controller="Creators"
+                       asp-action="Index"
+                       class="action-card">
                         <div>
                             <h3 class="cond">Creators</h3>
                             <p>View and manage creator records and profile details.</p>
                         </div>
-                        <div class="action-footer"><span>OPEN CREATORS</span><span>↗</span></div>
+                        <div class="action-footer">
+                            <span>OPEN CREATORS</span><span>↗</span>
+                        </div>
                     </a>
 
-                    <a class="action-card soon">
+                    <a asp-controller="Voting"
+                       asp-action="Leaderboard"
+                       class="action-card">
+                        <div>
+                            <h3 class="cond">Leaderboard</h3>
+                            <p>Review creator rankings and voting performance.</p>
+                        </div>
+                        <div class="action-footer">
+                            <span>VIEW RANKINGS</span><span>↗</span>
+                        </div>
+                    </a>
+
+                    <a class="action-card soon" aria-disabled="true">
                         <div>
                             <h3 class="cond">Platforms</h3>
                             <p>Manage connected platforms and their collection settings.</p>
                         </div>
-                        <div class="action-footer"><span>COMING SOON</span><span>·</span></div>
-                    </a>
-
-                    <a class="action-card soon">
-                        <div>
-                            <h3 class="cond">Imports</h3>
-                            <p>Review collected URLs and monitor profile processing.</p>
+                        <div class="action-footer">
+                            <span>COMING SOON</span><span>·</span>
                         </div>
-                        <div class="action-footer"><span>COMING SOON</span><span>·</span></div>
                     </a>
                 </div>
             </section>
@@ -1235,20 +1550,64 @@
     <footer class="footer">
         <div class="container footer-inner">
             <span>© @DateTime.UtcNow.Year CreatorHub</span>
-            <span>Creator management · Platform imports</span>
+            <span>Creator management · Voting · Platform imports</span>
         </div>
     </footer>
 
     <script>
-        // Prevents double submits while an import is running.
+        // Theme switcher: shared preference across CreatorHub pages.
         (function () {
-            var form = document.getElementById('import-form');
-            if (!form) return;
+            const root = document.documentElement;
+            const toggle = document.getElementById("themeToggle");
+            const icon = document.getElementById("themeIcon");
+            const label = document.getElementById("themeLabel");
 
-            form.addEventListener('submit', function () {
-                var button = document.getElementById('import-button');
-                button.setAttribute('disabled', 'disabled');
-                button.textContent = 'Importing, please wait...';
+            if (!toggle || !icon || !label) return;
+
+            function applyTheme(theme) {
+                const isDark = theme === "dark";
+
+                root.dataset.theme = theme;
+                icon.textContent = isDark ? "☀️" : "🌙";
+                label.textContent = isDark ? "Light mode" : "Dark mode";
+                toggle.setAttribute(
+                    "aria-label",
+                    isDark ? "Switch to light mode" : "Switch to dark mode"
+                );
+
+                try {
+                    localStorage.setItem("creatorhub-theme", theme);
+                } catch {
+                    // Theme still applies to the current page.
+                }
+            }
+
+            toggle.addEventListener("click", function () {
+                applyTheme(
+                    root.dataset.theme === "dark" ? "light" : "dark"
+                );
+            });
+
+            applyTheme(root.dataset.theme || "dark");
+        })();
+
+        // Prevent duplicate submissions while imports are running.
+        (function () {
+            [
+                ["import-form", "import-button", "Importing, please wait..."],
+                ["mdh-form", "mdh-button", "Uploading, please wait..."]
+            ].forEach(function (ids) {
+                const form = document.getElementById(ids[0]);
+                const button = document.getElementById(ids[1]);
+
+                if (!form || !button) return;
+
+                form.addEventListener("submit", function () {
+                    if (!form.checkValidity()) return;
+
+                    button.disabled = true;
+                    button.textContent = ids[2];
+                });
             });
         })();
     </script>

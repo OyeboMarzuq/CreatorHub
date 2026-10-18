@@ -98,6 +98,41 @@ namespace CreatorHub.Infrastructure.Repositories
             _context.Creators.Update(creator);
             return Task.CompletedTask;
         }
+        public async Task<Creator?> GetRandomActiveCreatorAsync(
+    Guid? excludeCreatorId = null,
+    CancellationToken cancellationToken = default)
+        {
+            var query = _context.Creators
+                .AsNoTracking()
+                .Where(c => c.IsActive);
+
+            if (excludeCreatorId.HasValue)
+            {
+                query = query.Where(c => c.Id != excludeCreatorId.Value);
+            }
+
+            var count = await query.CountAsync(cancellationToken);
+
+            if (count == 0)
+                return null;
+
+            var randomIndex = Random.Shared.Next(count);
+
+            return await query
+                .OrderBy(c => c.Id)
+                .Skip(randomIndex)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<List<Creator>> GetActiveByIdsAsync(
+            IReadOnlyCollection<Guid> ids,
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.Creators
+                .AsNoTracking()
+                .Where(c => ids.Contains(c.Id) && c.IsActive)
+                .ToListAsync(cancellationToken);
+        }
 
         public async Task<bool> ExistsBySlugAsync(string slug)
         {

@@ -111,6 +111,7 @@ public class CreatorImporter : ICreatorImporter
                     cancellationToken);
 
                 profileUrl.IsProcessed = true;
+                profileUrl.ImageUrl = profile.ProfileImageUrl;
                 profileUrl.ProcessedAt = DateTime.UtcNow;
 
                 await _profileUrlRepository.SaveChangesAsync();
