@@ -300,8 +300,7 @@ public class CreatorImporter : ICreatorImporter
                     "description",
                     "profile-about"),
 
-            ProfileImageUrl =
-                ExtractProfileImage(html),
+            ProfileImageUrl = ExtractProfileImage(html, profileUrl.Url),
 
             ExternalId =
                 ExtractAttribute(
@@ -434,23 +433,89 @@ public class CreatorImporter : ICreatorImporter
         return null;
     }
 
+    //private static string? ExtractProfileImage(
+    //    string html)
+    //{
+    //    var pattern =
+    //        @"<[^>]*id\s*=\s*[""']profile-header-container[""'][^>]*>.*?<img[^>]+src\s*=\s*[""']([^""']+)[""']";
+
+    //    var match = Regex.Match(
+    //        html,
+    //        pattern,
+    //        RegexOptions.IgnoreCase |
+    //        RegexOptions.Singleline);
+
+    //    if (!match.Success)
+    //        return null;
+
+    //    return WebUtility.HtmlDecode(
+    //        match.Groups[1].Value).Trim();
+    //}
+
     private static string? ExtractProfileImage(
-        string html)
+    string html,
+    string profileUrl)
     {
-        var pattern =
-            @"<[^>]*id\s*=\s*[""']profile-header-container[""'][^>]*>.*?<img[^>]+src\s*=\s*[""']([^""']+)[""']";
+        var imagePatterns = new[]
+        {
+        // Preferred: image specified for previews and sharing.
+        @"<meta[^>]+property\s*=\s*[""']og:image[""'][^>]+content\s*=\s*[""']([^""']+)[""']",
+        @"<meta[^>]+content\s*=\s*[""']([^""']+)[""'][^>]+property\s*=\s*[""']og:image[""']",
 
-        var match = Regex.Match(
-            html,
-            pattern,
-            RegexOptions.IgnoreCase |
-            RegexOptions.Singleline);
+        @"<meta[^>]+name\s*=\s*[""']twitter:image[""'][^>]+content\s*=\s*[""']([^""']+)[""']",
+        @"<meta[^>]+content\s*=\s*[""']([^""']+)[""'][^>]+name\s*=\s*[""']twitter:image[""']",
 
-        if (!match.Success)
-            return null;
+        // Profile header image.
+        @"id\s*=\s*[""']profile-header-container[""'][^>]*>[\s\S]*?<img\b[^>]*?\bsrc\s*=\s*[""']([^""']+)[""']",
 
-        return WebUtility.HtmlDecode(
-            match.Groups[1].Value).Trim();
+        // Lazy-loaded images used by some websites.
+        @"<img\b[^>]*?\bdata-src\s*=\s*[""']([^""']+)[""']",
+        @"<img\b[^>]*?\bsrc\s*=\s*[""']([^""']+)[""']"
+    };
+
+        foreach (var pattern in imagePatterns)
+        {
+            var match = Regex.Match(
+                html,
+                pattern,
+                RegexOptions.IgnoreCase |
+                RegexOptions.Singleline);
+
+            if (!match.Success)
+                continue;
+
+            var imageUrl = WebUtility.HtmlDecode(
+                match.Groups[1].Value.Trim());
+
+            if (!Uri.TryCreate(
+                    new Uri(profileUrl),
+                    imageUrl,
+                    out var absoluteUri))
+            {
+                continue;
+            }
+
+            if (absoluteUri.Scheme != Uri.UriSchemeHttps &&
+                absoluteUri.Scheme != Uri.UriSchemeHttp)
+            {
+                continue;
+            }
+
+            // Ignore embedded data and JavaScript URLs.
+            if (imageUrl.StartsWith(
+                    "data:",
+                    StringComparison.OrdinalIgnoreCase) ||
+                imageUrl.StartsWith(
+                    "javascript:",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            return absoluteUri.AbsoluteUri;
+        }
+
+        return null;
     }
 
     private static string? ExtractAttribute(
