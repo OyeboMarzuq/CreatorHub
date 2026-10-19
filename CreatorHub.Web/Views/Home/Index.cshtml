@@ -18,8 +18,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="@(isGerman
-                                     ? "Entdecke Creator auf BIG7, Frivol, MDH und weiteren Plattformen mit CreatorHub."
-                                     : "Discover creators across BIG7, Frivol, MDH and more with CreatorHub.")" />
+                                                                  ? "Entdecke Creator auf BIG7, Frivol, MDH und weiteren Plattformen mit CreatorHub."
+                                                                  : "Discover creators across BIG7, Frivol, MDH and more with CreatorHub.")" />
     <title>@ViewData["Title"]</title>
 
     <script>
@@ -1204,6 +1204,202 @@
                 scroll-behavior: auto !important;
             }
         }
+
+
+        /* Responsive mobile navigation sidebar */
+        .mobile-menu-toggle,
+        .sidebar-heading,
+        .mobile-menu-backdrop {
+            display: none;
+        }
+
+        @@media (max-width: 960px) {
+            nav {
+                position: relative;
+                z-index: 1002;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .mobile-menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin-left: auto;
+                padding: 10px 13px;
+                border: 1px solid rgba(255,255,255,.65);
+                background: var(--black);
+                color: var(--white);
+                font-size: 13px;
+                font-weight: 800;
+                white-space: nowrap;
+                cursor: pointer;
+            }
+
+                .mobile-menu-toggle:focus-visible,
+                .sidebar-close:focus-visible {
+                    outline: 3px solid var(--white);
+                    outline-offset: 3px;
+                }
+
+            .links {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+                gap: 0;
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: min(330px, 86vw);
+                height: 100vh;
+                height: 100dvh;
+                box-sizing: border-box;
+                padding: 22px 24px 30px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                background: var(--black);
+                color: var(--white);
+                z-index: 1004;
+                transform: translateX(105%);
+                visibility: hidden;
+                pointer-events: none;
+                transition: transform .25s ease, visibility .25s ease;
+                box-shadow: -12px 0 35px rgba(0,0,0,.3);
+                font-size: 14px;
+            }
+
+                .links.sidebar-open {
+                    transform: translateX(0);
+                    visibility: visible;
+                    pointer-events: auto;
+                }
+
+            .sidebar-heading {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding-bottom: 22px;
+                margin-bottom: 12px;
+                border-bottom: 1px solid #383838;
+            }
+
+                .sidebar-heading .logo {
+                    display: inline-block;
+                    font-size: 26px;
+                    color: var(--red);
+                }
+
+            .sidebar-close {
+                display: grid;
+                place-items: center;
+                flex: 0 0 42px;
+                width: 42px;
+                height: 42px;
+                padding: 0;
+                border: 1px solid #555;
+                background: transparent;
+                color: var(--white);
+                font-size: 30px;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .links > a {
+                display: block;
+                padding: 16px 8px;
+                border-bottom: 1px solid #292929;
+                color: var(--white);
+                overflow-wrap: anywhere;
+            }
+
+                .links > a:hover,
+                .links > a.on {
+                    color: #ff4b45;
+                    border-bottom-color: var(--red);
+                }
+
+            .mobile-menu-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 1003;
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                border: 0;
+                background: rgba(0,0,0,.65);
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transition: opacity .25s ease, visibility .25s ease;
+                cursor: pointer;
+            }
+
+            body.mobile-menu-open {
+                overflow: hidden;
+            }
+
+                body.mobile-menu-open .mobile-menu-backdrop {
+                    opacity: 1;
+                    visibility: visible;
+                    pointer-events: auto;
+                }
+
+            .nav-actions {
+                min-width: 0;
+                flex: 0 1 auto;
+                margin-left: 0;
+            }
+        }
+
+        @@media (max-width: 560px) {
+            nav {
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+                nav > .logo {
+                    font-size: 25px;
+                    line-height: 1.2;
+                }
+
+            .mobile-menu-toggle {
+                margin-left: auto;
+                padding: 9px 11px;
+                font-size: 12px;
+            }
+
+            .nav-actions {
+                flex: 1 1 100%;
+                min-width: 0;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 7px;
+            }
+
+            .home-language-switch {
+                flex: 0 0 auto;
+            }
+
+            .home-theme-toggle {
+                flex: 0 1 auto;
+                padding: 9px 10px;
+            }
+        }
+
+        @@media (prefers-reduced-motion: reduce) {
+            .links,
+            .mobile-menu-backdrop {
+                transition: none !important;
+            }
+        }
+
     </style>
 </head>
 
@@ -1213,7 +1409,26 @@
             <nav aria-label="@(isGerman ? "Hauptnavigation" : "Main navigation")">
                 <a href="#home" class="logo">Creator<i>Hub</i></a>
 
-                <div class="links">
+                <button type="button"
+                        class="mobile-menu-toggle"
+                        id="mobileMenuToggle"
+                        aria-label="@(isGerman ? "Navigation öffnen" : "Open navigation menu")"
+                        aria-controls="mobileSidebar"
+                        aria-expanded="false">
+                    <span class="menu-icon" aria-hidden="true">☰</span>
+                    <span>@(isGerman ? "Menü" : "Menu")</span>
+                </button>
+
+                <div class="links" id="mobileSidebar">
+                    <div class="sidebar-heading">
+                        <span class="logo">Creator<i>Hub</i></span>
+                        <button type="button"
+                                id="mobileMenuClose"
+                                class="sidebar-close"
+                                aria-label="@(isGerman ? "Navigation schließen" : "Close navigation menu")">
+                            &times;
+                        </button>
+                    </div>
                     <a href="#home" class="on">@(isGerman ? "Startseite" : "Home")</a>
                     <a href="#creators">@(isGerman ? "Creator" : "Creators")</a>
                     <a asp-controller="Voting" asp-action="Index">
@@ -1295,6 +1510,11 @@
                     }
                 </div>
             </nav>
+            <button type="button"
+                    class="mobile-menu-backdrop"
+                    id="mobileMenuBackdrop"
+                    aria-label="@(isGerman ? "Navigation schließen" : "Close navigation menu")"
+                    tabindex="-1"></button>
 
             <h1 class="cond">
                 <span class="l1">@(isGerman ? "Creator entdecken" : "Where creators")</span>
@@ -1980,6 +2200,66 @@
             });
 
             applyTheme(root.getAttribute("data-theme") || "dark");
+        })();
+    </script>
+
+    <script>
+        (() => {
+            const menuButton = document.getElementById("mobileMenuToggle");
+            const sidebar = document.getElementById("mobileSidebar");
+            const closeButton = document.getElementById("mobileMenuClose");
+            const backdrop = document.getElementById("mobileMenuBackdrop");
+            const root = document.documentElement;
+            const isGerman = root.lang.toLowerCase().startsWith("de");
+
+            if (!menuButton || !sidebar || !closeButton || !backdrop) return;
+
+            function openMenu() {
+                sidebar.classList.add("sidebar-open");
+                document.body.classList.add("mobile-menu-open");
+                menuButton.setAttribute("aria-expanded", "true");
+                menuButton.setAttribute(
+                    "aria-label",
+                    isGerman ? "Navigation schließen" : "Close navigation menu"
+                );
+                closeButton.focus();
+            }
+
+            function closeMenu(returnFocus = false) {
+                sidebar.classList.remove("sidebar-open");
+                document.body.classList.remove("mobile-menu-open");
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute(
+                    "aria-label",
+                    isGerman ? "Navigation öffnen" : "Open navigation menu"
+                );
+                if (returnFocus) menuButton.focus();
+            }
+
+            menuButton.addEventListener("click", () => {
+                if (sidebar.classList.contains("sidebar-open")) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            });
+
+            closeButton.addEventListener("click", () => closeMenu(true));
+            backdrop.addEventListener("click", () => closeMenu(true));
+
+            sidebar.querySelectorAll("a").forEach(link => {
+                link.addEventListener("click", () => closeMenu());
+            });
+
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape" && sidebar.classList.contains("sidebar-open")) {
+                    closeMenu(true);
+                }
+            });
+
+            window.addEventListener("resize", () => {
+                if (window.innerWidth > 960) closeMenu();
+            });
         })();
     </script>
 </body>

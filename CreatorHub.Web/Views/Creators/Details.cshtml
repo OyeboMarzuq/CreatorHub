@@ -2,153 +2,191 @@
 
 @{
     ViewData["Title"] = Model.DisplayName;
+
+    var hasProfileUrl =
+        !string.IsNullOrWhiteSpace(Model.ProfileUrl) &&
+        Uri.TryCreate(Model.ProfileUrl, UriKind.Absolute, out var profileUri) &&
+        (profileUri.Scheme == Uri.UriSchemeHttps ||
+         profileUri.Scheme == Uri.UriSchemeHttp);
+
+    var hasImage = !string.IsNullOrWhiteSpace(Model.ProfileImageUrl);
 }
 
 <div class="container py-5">
 
-    <!-- BACK -->
-
     <div class="mb-4">
-
         <a asp-controller="Creators"
            asp-action="Index"
            class="text-decoration-none">
-
-            ← Back to Creators
-
+            &larr; Back to Creators
         </a>
-
     </div>
-
-
-    <!-- PROFILE -->
 
     <div class="row g-5">
 
-        <!-- IMAGE -->
+        <!-- PROFILE IMAGE -->
         <div class="col-lg-5">
-            @if (!string.IsNullOrWhiteSpace(Model.ProfileImageUrl))
-            {
-                <img src="@Model.ProfileImageUrl"
-                     alt="@Model.DisplayName"
-                     class="img-fluid rounded-4 shadow-sm w-100"
-                     style="max-height: 600px; object-fit: cover;"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
 
-                <div class="bg-light rounded-4 align-items-center justify-content-center"
-                     style="height: 500px; display: none;">
-                    <span class="text-muted">Image could not be loaded</span>
+            <div class="creator-image-container">
+
+                @if (hasImage)
+                {
+                    @if (hasProfileUrl)
+                    {
+                        <a href="@Model.ProfileUrl"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           title="View original profile">
+
+                            <img src="@Model.ProfileImageUrl"
+                                 alt="@Model.DisplayName"
+                                 class="creator-profile-image rounded-4 shadow-sm"
+                                 onerror="this.style.display='none'; this.closest('.creator-image-container').querySelector('.image-fallback').style.display='flex';" />
+                        </a>
+                    }
+                    else
+                    {
+                        <img src="@Model.ProfileImageUrl"
+                             alt="@Model.DisplayName"
+                             class="creator-profile-image rounded-4 shadow-sm"
+                             onerror="this.style.display='none'; this.closest('.creator-image-container').querySelector('.image-fallback').style.display='flex';" />
+                    }
+                }
+
+                <div class="image-fallback rounded-4"
+                     style="display:@(hasImage ? "none" : "flex");">
+
+                    <div class="text-center p-4">
+                        <div class="fs-1 mb-2">&#128444;</div>
+                        <strong>Image unavailable</strong>
+                        <p class="text-muted small mb-0">
+                            The profile image could not be loaded.
+                        </p>
+                    </div>
+
                 </div>
-            }
-            else
+
+            </div>
+
+            @if (hasProfileUrl)
             {
-                <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
-                     style="height: 500px;">
-                    <span class="text-muted">No Image URL provided</span>
-                </div>
+                <a href="@Model.ProfileUrl"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="btn btn-danger w-100 mt-3 py-3">
+                    View Original Profile &nearr;
+                </a>
             }
+
+            @if (!string.IsNullOrWhiteSpace(Model.PlatformName))
+            {
+                <p class="text-muted small text-center mt-2">
+                    Source: @Model.PlatformName
+                </p>
+            }
+
+            <!-- TEMPORARY DIAGNOSTICS -->
+            <div class="card mt-4 border-warning">
+                <div class="card-header bg-warning-subtle">
+                    <strong>Image Troubleshooting</strong>
+                </div>
+
+                <div class="card-body small">
+                    <p>
+                        <strong>Image URL:</strong><br />
+                        @if (hasImage)
+                        {
+                            <a href="@Model.ProfileImageUrl"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="text-break">
+                                @Model.ProfileImageUrl
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-danger">EMPTY</span>
+                        }
+                    </p>
+
+                    <p>
+                        <strong>Original Profile URL:</strong><br />
+                        @if (hasProfileUrl)
+                        {
+                            <a href="@Model.ProfileUrl"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="text-break">
+                                @Model.ProfileUrl
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-danger">EMPTY OR INVALID</span>
+                        }
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Platform:</strong>
+                        @(Model.PlatformName ?? "Not populated")
+                    </p>
+                </div>
+            </div>
+
         </div>
 
-
-        <!-- INFORMATION -->
-
+        <!-- PROFILE INFORMATION -->
         <div class="col-lg-7">
 
             <div class="mb-4">
-
                 <h1 class="display-5 fw-bold">
                     @Model.DisplayName
                 </h1>
 
                 @if (!string.IsNullOrWhiteSpace(Model.Bio))
                 {
-                    <p class="lead text-muted">
-                        @Model.Bio
-                    </p>
+                    <p class="lead text-muted">@Model.Bio</p>
                 }
-
             </div>
 
-
-            <!-- BASIC INFORMATION -->
-
             <div class="card border-0 shadow-sm mb-4">
-
                 <div class="card-body p-4">
-
-                    <h2 class="h5 mb-4">
-                        Profile Information
-                    </h2>
-
+                    <h2 class="h5 mb-4">Profile Information</h2>
 
                     @if (Model.Age.HasValue)
                     {
                         <div class="mb-3">
-
-                            <strong>
-                                Age:
-                            </strong>
-
-                            @Model.Age
-
+                            <strong>Age:</strong> @Model.Age
                         </div>
                     }
-
 
                     @if (!string.IsNullOrWhiteSpace(Model.Gender))
                     {
                         <div class="mb-3">
-
-                            <strong>
-                                Gender:
-                            </strong>
-
-                            @Model.Gender
-
+                            <strong>Gender:</strong> @Model.Gender
                         </div>
                     }
-
 
                     @if (!string.IsNullOrWhiteSpace(Model.Country))
                     {
                         <div class="mb-3">
-
-                            <strong>
-                                Country:
-                            </strong>
-
-                            @Model.Country
-
+                            <strong>Country:</strong> @Model.Country
                         </div>
                     }
-
 
                     @if (!string.IsNullOrWhiteSpace(Model.Region))
                     {
                         <div class="mb-3">
-
-                            <strong>
-                                Region:
-                            </strong>
-
-                            @Model.Region
-
+                            <strong>Region:</strong> @Model.Region
                         </div>
                     }
-
                 </div>
-
             </div>
 
-
-            <!-- CATEGORIES -->
-            @if (Model.Categories.Any())
+            @if (Model.Categories?.Any() == true)
             {
                 <div class="mb-4">
-
-                    <h2 class="h5 mb-3">
-                        Categories
-                    </h2>
+                    <h2 class="h5 mb-3">Categories</h2>
 
                     @foreach (var category in Model.Categories)
                     {
@@ -156,19 +194,13 @@
                             @category
                         </span>
                     }
-
                 </div>
             }
 
-
-            <!-- TAGS -->
-            @if (Model.Tags.Any())
+            @if (Model.Tags?.Any() == true)
             {
                 <div class="mb-4">
-
-                    <h2 class="h5 mb-3">
-                        Tags
-                    </h2>
+                    <h2 class="h5 mb-3">Tags</h2>
 
                     @foreach (var tag in Model.Tags)
                     {
@@ -176,12 +208,41 @@
                             #@tag
                         </span>
                     }
-
                 </div>
             }
 
         </div>
-
     </div>
-
 </div>
+
+<style>
+    .creator-profile-image {
+        display: block;
+        width: 100%;
+        max-height: 600px;
+        min-height: 250px;
+        object-fit: cover;
+        transition: transform 0.2s ease;
+    }
+
+    .creator-image-container a {
+        display: block;
+    }
+
+        .creator-image-container a:hover .creator-profile-image {
+            transform: scale(1.01);
+        }
+
+    .image-fallback {
+        width: 100%;
+        min-height: 350px;
+        align-items: center;
+        justify-content: center;
+        background: #f3f3f3;
+        border: 1px solid #ddd;
+    }
+
+    .text-break {
+        overflow-wrap: anywhere;
+    }
+</style>

@@ -1,4 +1,5 @@
-﻿using CreatorHub.Application.DTOs.Creators;
+﻿
+using CreatorHub.Application.DTOs.Creators;
 using CreatorHub.Application.Interfaces.Repositories;
 using CreatorHub.Application.Interfaces.Services;
 using CreatorHub.Domain.Entities;
@@ -18,29 +19,21 @@ public class CreatorService : ICreatorService
     {
         var creator = await _creatorRepository.GetByIdAsync(id);
 
-        if (creator == null)
-            return null;
-
-        return MapToDto(creator);
+        return creator == null ? null : MapToDto(creator);
     }
 
     public async Task<CreatorDto?> GetBySlugAsync(string slug)
     {
         var creator = await _creatorRepository.GetBySlugAsync(slug);
 
-        if (creator == null)
-            return null;
-
-        return MapToDto(creator);
+        return creator == null ? null : MapToDto(creator);
     }
 
     public async Task<List<CreatorDto>> GetAllAsync()
     {
         var creators = await _creatorRepository.GetAllAsync();
 
-        return creators
-            .Select(MapToDto)
-            .ToList();
+        return creators.Select(MapToDto).ToList();
     }
 
     public async Task<CreatorDto> CreateAsync(CreateCreatorDto request)
@@ -79,6 +72,18 @@ public class CreatorService : ICreatorService
 
     private static CreatorDto MapToDto(Creator creator)
     {
+        // Choose a platform profile that has a usable original URL.
+        var platformProfile = creator.PlatformProfiles?
+            .Where(p => p.IsActive)
+            .Where(p => !string.IsNullOrWhiteSpace(p.ProfileUrl))
+            .OrderBy(p => p.Platform == null ? 1 : 0)
+            .FirstOrDefault();
+
+        // Fall back to any profile with a URL if none is active.
+        platformProfile ??= creator.PlatformProfiles?
+            .FirstOrDefault(p =>
+                !string.IsNullOrWhiteSpace(p.ProfileUrl));
+
         return new CreatorDto
         {
             Id = creator.Id,
@@ -88,18 +93,50 @@ public class CreatorService : ICreatorService
             Gender = creator.Gender,
             Country = creator.Country,
             Region = creator.Region,
-            ProfileImageUrl = creator.ProfileImageUrl,
+
+            ProfileImageUrl = FirstNonEmpty(
+                creator.ProfileImageUrl,
+                platformProfile?.ProfileImageUrl),
+
+            // This is the original profile page, not the image CDN.
+            ProfileUrl = GetSafeHttpUrl(platformProfile?.ProfileUrl),
+
+            PlatformName = platformProfile?.Platform?.Name,
+
             Bio = creator.Bio,
             IsActive = creator.IsActive,
 
-            Categories = creator.Categories
+            Categories = creator.Categories?
+                .Where(x => x.Category != null)
                 .Select(x => x.Category.Name)
-                .ToList(),
+                .ToList() ?? [],
 
-            Tags = creator.Tags
+            Tags = creator.Tags?
+                .Where(x => x.Tag != null)
                 .Select(x => x.Tag.Name)
-                .ToList()
+                .ToList() ?? []
         };
+    }
+
+    private static string? FirstNonEmpty(params string?[] values)
+    {
+        return values.FirstOrDefault(value =>
+            !string.IsNullOrWhiteSpace(value));
+    }
+
+    private static string? GetSafeHttpUrl(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        if (Uri.TryCreate(value, UriKind.Absolute, out var uri) &&
+            (uri.Scheme == Uri.UriSchemeHttps ||
+             uri.Scheme == Uri.UriSchemeHttp))
+        {
+            return uri.AbsoluteUri;
+        }
+
+        return null;
     }
 
     private static string GenerateSlug(string value)
